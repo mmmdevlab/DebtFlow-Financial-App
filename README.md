@@ -8,19 +8,21 @@
 
 ## Technologies & Tools Used
 
-- Frontend: React + Vite
-- Styling: Tailwindcss
-- Routing: React Router DOM
-- Backend: Node.js, Express.js.
-- Database: MongoDB & Mongoose.
-- Authentication: JWT
-- Deployment: Netlify.
+- **Frontend:** React + Vite
+- **Styling:** Tailwindcss
+- **Routing:** React Router DOM
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB, Mongoose
+- **Authentication:** JWT
+- **Deployment:** Netlify
 
 ---
 
 # DebtFlow: Debt & Repayment Tracker
 
-[logo]
+![DebtFlow Logo][logo]
+
+[logo]: ../DebtFlow-Financial-App/frontend/public/Logo_h.svg
 
 **Live App:** [Deploy Link Here]
 
@@ -50,6 +52,8 @@ Debt is difficult to manage because it is invisible, fragmented, and time-depend
 
 Debt is not just financial — it creates cognitive stress, social friction, and operational inefficiency.
 
+---
+
 **The Insight**
 Most financial apps model cash outflow, not liabilities over time.
 They focus on budgeting, expense tracking, and saving goals. What's missing:
@@ -62,14 +66,16 @@ Debt is not a static number. It is a time-based system of obligations and repaym
 
 Without modeling that system, users cannot predict future burden, prioritise repayments, or maintain financial clarity.
 
+---
+
 **The Solution**
 
 DebtFlow is a dedicated debt management system that tracks:
 
-✅ What you owe
-✅ Who you owe it to
-✅ When payments are due
-✅ How each repayment reduces your liability over time
+- What you owe
+- Who you owe it to
+- When payments are due
+- How each repayment reduces your liability over time
 
 A system that models debt as a time-based liability structure, giving users clear visibility into obligations and repayment progress.
 
@@ -129,6 +135,7 @@ DebtFlow
 ## Future Roadmap
 
 - Business accounts with invoice tracking
+- Able to add receipts/invoice attachments
 - 3-month vs 1-month insights outlook
 - Notification and payment reminders
 - Export to CSV / PDF
