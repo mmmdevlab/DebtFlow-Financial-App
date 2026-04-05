@@ -1,0 +1,19 @@
+info:
+  name: Delete_removeDebt
+  type: http
+  seq: 7
+
+http:
+  method: DELETE
+  url: "{{BASE_URL}}/debts/:debtsId"
+  params:
+    - name: debtsId
+      value: xxx
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

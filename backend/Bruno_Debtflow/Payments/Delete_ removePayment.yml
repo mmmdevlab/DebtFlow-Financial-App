@@ -1,0 +1,22 @@
+info:
+  name: Delete_ removePayment
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: "{{BASE_URL}}/debts/:debtId/payments/:paymentId"
+  params:
+    - name: paymentId
+      value: xxx
+      type: path
+    - name: debtId
+      value: xxx
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

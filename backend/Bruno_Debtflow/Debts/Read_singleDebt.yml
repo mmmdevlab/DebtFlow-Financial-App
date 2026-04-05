@@ -1,0 +1,19 @@
+info:
+  name: Read_singleDebt
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{BASE_URL}}/debts/:debtsId"
+  params:
+    - name: debtsId
+      value: xxx
+      type: path
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

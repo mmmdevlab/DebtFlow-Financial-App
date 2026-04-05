@@ -134,10 +134,10 @@ DebtFlow
 
 ## Future Roadmap
 
-- Business accounts with invoice tracking
-- Able to add receipts/invoice attachments
-- 3-month vs 1-month insights outlook
-- Notification and payment reminders
+- Business accounts with invoice tracking and multi-user view
+- Receipt and invoice attachments on payment entries
+- 3-month cash flow forecast
+- Payment reminders and overdue email notifications
 - Export to CSV / PDF
 - Multi-currency support
 

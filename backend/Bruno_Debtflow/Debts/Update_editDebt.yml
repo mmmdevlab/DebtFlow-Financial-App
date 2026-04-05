@@ -1,0 +1,32 @@
+info:
+  name: Update_editDebt
+  type: http
+  seq: 6
+
+http:
+  method: PUT
+  url: "{{BASE_URL}}/debts/:debtsId"
+  params:
+    - name: debtsId
+      value: xxx
+      type: path
+  body:
+    type: json
+    data: |-
+      data: {
+        "creditor_name": "DBS Bank",
+        "category": "Credit Card",
+        "total_amount": 2000,
+        "monthly_amount": 500,
+        "due_date": "2026-05-27",
+        "interest_rate": 25.0,
+        "frequency": "Monthly",
+        "late_fee": 100,
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

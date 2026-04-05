@@ -1,0 +1,27 @@
+info:
+  name: Create_logPayment
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{BASE_URL}}/debts/:debtId/payments"
+  params:
+    - name: debtId
+      value: xxx
+      type: path
+  body:
+    type: json
+    data: |-
+      body: { 
+        amount_paid: " ", 
+        payment_date: " ", 
+        notes: " ",
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
