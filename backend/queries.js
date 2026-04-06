@@ -86,6 +86,9 @@ const deleteUser = async () => {
 /*-------CREATE DEBT----- */
 
 const createDebt = async () => {
+  const userId = "69d36cc078ba3c41786b27d9"
+  const user = await User.findById(userId)
+
   const debtsData = [
     {
       label: "HDB",
@@ -103,24 +106,63 @@ const createDebt = async () => {
   console.log("Cleared existing debts.");
 
   for (const debtData of debtsData) {
-    const debt = await Debt.create(debtData);
-    console.log("New debt:", debt);
+    const debt = await Debt.create({...debtData, assignee: user._id});
+    console.log("New debt added to user:", debt);
   }
 };
 
 /*-------READ DEBT----- */
 
+const getUserDebts = async () => {
+  const userId = '69d36cc078ba3c41786b27d9'
+  const debts = await Debt.find ({ assignee: userId})
+
+  console.log("User Debts", debts)
+
+}
+
 /*-------EDIT / UPDATE DEBT----- */
 
+const updateDebt = async () => {
+  const debtId = '69d3ddf1e812711f37893c50';
+
+  const debt = await Debt.findByIdAndUpdate(
+    debtId, // id
+    {
+      label: "HDB_2",
+      category: "mortgage_2",
+      principle_amount: 350001,
+      interest_rate: 2.51,
+      current_balance: 350001,
+      start_date: new Date("2026-01-01"),
+      due_date: new Date("2046-01-01"),
+      frequency: "monthly",
+      status: "active",
+    },   
+    { new: true }, // { new: true }, // options
+  );
+  console.log("Updated Debt", debt);
+};
+
+
 /*-------DELETE DEBT----- */
+
+const deleteDebt = async () => {
+
+  const debtId = '69d3ddf1e812711f37893c50';
+
+  const debt = await Debt.findByIdAndDelete(debtId);
+  console.log("Deleted", debt);
+};
+
 
 /*----------------------------------------PAYMENT-----------------------------------------*/
 
 /*-------CREATE PAYMENT----- */
 
 const createPayment = async () => {
-  const user = await User.findOne({ username: "JohnDoe" });
-  const debt = await Debt.findOne({ label: "HDB" });
+  const user = await User.findOne({ username: "JohnDoe" }); //Rama: Suggest we find by ID because it will be problematic if there are users with the exact same name. 
+  const debt = await Debt.findOne({ label: "HDB" }); //Rama: Suggest we find by ID because it will be problematic if there are Debts with the exact same label. 
 
   if (!user || !debt) {
     console.log("User or debt not found, run createUser and createDebt first");
@@ -231,6 +273,9 @@ const runQueries = async () => {
 
   // --- DEBT ---
   // await createDebt();
+  // await getUserDebts();
+  // await updateDebt()
+  await deleteDebt()
 
   // --- PAYMENTS ---
   // await createPayment();
