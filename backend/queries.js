@@ -108,13 +108,22 @@ const createPayment = async () => {
 
 /*-------READ PAYMENT----- */
 
+const findPayment = async () => {
+  const id = "69d36cc178ba3c41786b27dc" //change the Id as required.
+  const payment = await Payment.findById(id).exec() 
+  console.log("Payment:", payment);
+}
+
 /*-------EDIT PAYMENT----- */
+
 
 /*-------DELETE PAYMENT----- */
 
 const runQueries = async () => {
   console.log("Queries running.");
-  await createUser();
-  await createDebt();
-  await createPayment();
+  // await createUser();
+  // await createDebt();
+  // await createPayment();
+  await findPayment()
+
 };
