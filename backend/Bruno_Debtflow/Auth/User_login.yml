@@ -10,8 +10,8 @@ http:
     type: json
     data: |
       body: { 
-        email: " ", 
-        password: " ",
+        username: " ", 
+        hashedPassword: " ",
       }
   auth: inherit
 
