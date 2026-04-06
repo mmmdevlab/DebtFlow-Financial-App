@@ -21,7 +21,9 @@ const connect = async () => {
 connect();
 /*-------------------------------- Query Functions --------------------------------*/
 
-/*----USER CREATE----*/
+/*-----------------------------------USERS-----------------------------------------------*/
+
+/*----CREATE USER----*/
 
 const createUser = async () => {
   const usersData = [
@@ -48,11 +50,38 @@ const createUser = async () => {
   }
 };
 
-/*----USER READ----*/
+const findAllUsers = async () => {
+  const users = await User.find({});
+  console.log("All users:", users);
+};
 
-/*----USER DELETE----*/
+const findUserById = async () => {
+  const id = "69d3565e3e9ed960ddf9f792"; //change the Id as required.
+  const user = await User.findById(id);
+  console.log("Found user:", user);
+};
 
-/*----------------------------------------------------------------------------------*/
+const findUserByUsername = async () => {
+  const user = await User.findOne({ username: "JohnDoe" });
+  console.log("Found by username:", user);
+};
+
+const deleteUser = async () => {
+  const id = "69d3565e3e9ed960ddf9f792"; //change the Id as required.
+  const debts = await Debt.find({ user_id: id });
+  const debtIds = debts.map((debt) => debt._id);
+
+  await Payment.deleteMany({ debt_id: { $in: debtIds } });
+  console.log(`Deleted payments for ${debtIds.length} debts`);
+
+  await Debt.deleteMany({ user_id: id });
+  console.log("Deleted user's debts");
+
+  const deleted = await User.findByIdAndDelete(id);
+  console.log("Deleted user:", deleted);
+};
+
+/*-----------------------------------DEBT-----------------------------------------------*/
 
 /*-------CREATE DEBT----- */
 
@@ -81,49 +110,133 @@ const createDebt = async () => {
 
 /*-------READ DEBT----- */
 
-/*-------EDIT DEBT----- */
+/*-------EDIT / UPDATE DEBT----- */
 
 /*-------DELETE DEBT----- */
 
-/*----------------------------------------------------------------------------------*/
+/*----------------------------------------PAYMENT-----------------------------------------*/
 
 /*-------CREATE PAYMENT----- */
 
 const createPayment = async () => {
-  const paymentsData = [
-    {
-      amount: 500,
-      payment_date: new Date("2026-02-01"),
-    },
-  ];
+  const user = await User.findOne({ username: "JohnDoe" });
+  const debt = await Debt.findOne({ label: "HDB" });
 
-  await Payment.deleteMany({});
-  console.log("Cleared existing payments.");
+  if (!user || !debt) {
+    console.log("User or debt not found, run createUser and createDebt first");
+    return;
+  }
 
-  for (const paymentData of paymentsData) {
-    const payment = await Payment.create(paymentData);
-    console.log("New payment:", payment);
+  const paymentAmount = 500;
+
+  const payment = await Payment.create({
+    user_id: user._id,
+    debt_id: debt._id,
+    amount: paymentAmount,
+    payment_date: new Date("2026-03-01"),
+  });
+  console.log("New payment created:", payment);
+
+  const updatedDebt = await Debt.findByIdAndUpdate(
+    debt._id,
+    { $inc: { current_balance: -paymentAmount } },
+    { new: true },
+  );
+  console.log("Updated debt balance:", updatedDebt.current_balance);
+
+  if (updatedDebt.current_balance <= 0) {
+    await Debt.findByIdAndUpdate(debt._id, { status: "paid_off" });
+    console.log("Debt fully paid off!");
   }
 };
 
 /*-------READ PAYMENT----- */
 
-const findPayment = async () => {
-  const id = "69d36cc178ba3c41786b27dc" //change the Id as required.
-  const payment = await Payment.findById(id).exec() 
+const findPaymentId = async () => {
+  const id = "69d3565e3e9ed960ddf9f798"; //change the Id as required.
+  const payment = await Payment.findById(id)
+    .populate("user_id", "username")
+    .populate("debt_id", "label")
+    .exec();
   console.log("Payment:", payment);
-}
+};
 
-/*-------EDIT PAYMENT----- */
+const findAllPayments = async () => {
+  const payments = await Payment.find({})
+    .populate("user_id", "username email") // replaces the ObjectId with user data
+    .populate("debt_id", "label current_balance"); // replaces debt ObjectId with debt data
+  console.log("All payments:", payments);
+};
 
+const findPaymentsByDebt = async () => {
+  const debt = await Debt.findOne({ label: "HDB" });
+  const payments = await Payment.find({ debt_id: debt._id });
+  console.log(`Payments for ${debt.label}:`, payments);
+};
+
+/*-------EDIT UPDATE PAYMENT----- */
+const editPayment = async () => {
+  const id = "69d3565e3e9ed960ddf9f795"; //update the Id as required.
+
+  const oldPayment = await Payment.findById(id);
+  const newAmount = 750;
+  const difference = newAmount - oldPayment.amount;
+
+  const updated = await Payment.findByIdAndUpdate(
+    id,
+    { amount: newAmount },
+    { new: true },
+  );
+  console.log("Updated payment:", updated);
+
+  const updatedDebt = await Debt.findByIdAndUpdate(
+    oldPayment.debt_id,
+    { $inc: { current_balance: -difference } },
+    { new: true },
+  );
+  console.log("Adjusted debt balance:", updatedDebt.current_balance);
+};
 
 /*-------DELETE PAYMENT----- */
+const deletePayment = async () => {
+  const id = "69d3565e3e9ed960ddf9f795"; // add the Id as required.
+
+  const payment = await Payment.findById(id);
+
+  if (!payment) {
+    console.log("Payment not found");
+    return;
+  }
+
+  await Payment.findByIdAndDelete(id);
+  console.log("Payment deleted");
+
+  const updatedDebt = await Debt.findByIdAndUpdate(
+    payment.debt_id,
+    { $inc: { current_balance: payment.amount } }, // add it back
+    { new: true },
+  );
+  console.log("Debt balance restored to:", updatedDebt.current_balance);
+};
+/*----------------------------------------------------------------*/
 
 const runQueries = async () => {
   console.log("Queries running.");
+  // --- USERS ---
   // await createUser();
-  // await createDebt();
-  // await createPayment();
-  await findPayment()
+  // await findAllUsers();
+  // await findUserById();
+  // await findUserByUsername();
+  // await deleteUser();
 
+  // --- DEBT ---
+  // await createDebt();
+
+  // --- PAYMENTS ---
+  // await createPayment();
+  // await findAllPayments();
+  // await findPaymentById();
+  // await findPaymentsByDebt();
+  // await editPayment();
+  // await deletePayment();
 };
