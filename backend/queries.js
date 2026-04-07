@@ -1,5 +1,5 @@
 /*-------------------------------- Starter Code --------------------------------*/
-
+const { faker } = require("@faker-js/faker");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -25,29 +25,48 @@ connect();
 
 /*----CREATE USER----*/
 
-const createUser = async () => {
-  const usersData = [
-    {
-      username: "JohnDoe",
-      hashedPassword: "123",
-      email: "JohnDoe@gmail.com",
-      accountType: "Personal",
-    },
-    {
-      username: "JaneDoe",
-      hashedPassword: "456",
-      email: "JaneDoe@gmail.com",
-      accountType: "Personal",
-    },
-  ];
+// const createUser = async () => {
+//   const usersData = [
+//     {
+//       username: "JohnDoe",
+//       hashedPassword: "123",
+//       email: "JohnDoe@gmail.com",
+//       accountType: "Personal",
+//     },
+//     {
+//       username: "JaneDoe",
+//       hashedPassword: "456",
+//       email: "JaneDoe@gmail.com",
+//       accountType: "Personal",
+//     },
+//   ];
 
+//   await User.deleteMany({});
+//   console.log("Cleared existing users.");
+
+//   for (const userData of usersData) {
+//     const user = await User.create(userData);
+//     console.log("New user:", user);
+//   }
+// };
+
+const createUser = async () => {
   await User.deleteMany({});
   console.log("Cleared existing users.");
 
-  for (const userData of usersData) {
-    const user = await User.create(userData);
-    console.log("New user:", user);
+  const users = [];
+
+  for (let i = 0; i < 10; i++) {
+    users.push({
+      username: faker.internet.username(),
+      hashedPassword: faker.internet.password(),
+      email: faker.internet.email(),
+      accountType: faker.helpers.arrayElement(["Personal", "Business"]),
+    });
   }
+
+  const createdUsers = await User.insertMany(users);
+  console.log("Users created:", createdUsers);
 };
 
 const findAllUsers = async () => {
@@ -56,18 +75,26 @@ const findAllUsers = async () => {
 };
 
 const findUserById = async () => {
-  const id = "69d4664b3896a3fbb27ae90d"; //change the Id as required.
+  const users = await User.find({});
+  const randomUser = users[Math.floor(Math.random() * users.length)];
+  const id = randomUser._id; //change the Id as required.
   const user = await User.findById(id);
-  console.log("Found user:", user);
+  console.log("Found by Id:", user);
 };
 
 const findUserByUsername = async () => {
-  const user = await User.findOne({ username: "JohnDoe" });
+  const users = await User.find({});
+  const randomUser = users[Math.floor(Math.random() * users.length)];
+
+  const user = await User.findOne({ username: randomUser.username });
   console.log("Found by username:", user);
 };
 
 const deleteUser = async () => {
-  const id = "69d3565e3e9ed960ddf9f792"; //change the Id as required.
+  const users = await User.find({});
+  const randomUser = users[Math.floor(Math.random() * users.length)];
+
+  const id = randomUser._id;
   const debts = await Debt.find({ user_id: id });
   const debtIds = debts.map((debt) => debt._id);
 
@@ -86,7 +113,13 @@ const deleteUser = async () => {
 /*-------CREATE DEBT----- */
 
 const createDebt = async () => {
-  const userId = "69d46ac581785778bf7a96f3";
+  const users = await User.find({});
+  const randomUser = users[Math.floor(Math.random() * users.length)];
+  const userId = randomUser._id;
+  await Debt.deleteMany({});
+  console.log("Cleared existing users.");
+
+  // const userId = "69d36cc078ba3c41786b27d9"
   const user = await User.findById(userId);
 
   const debtsData = [
@@ -106,7 +139,7 @@ const createDebt = async () => {
   console.log("Cleared existing debts.");
 
   for (const debtData of debtsData) {
-    const debt = await Debt.create({ ...debtData, user_id: user._id });
+    const debt = await Debt.create({ ...debtData, userId: user._id });
     console.log("New debt added to user:", debt);
   }
 };
@@ -114,8 +147,8 @@ const createDebt = async () => {
 /*-------READ DEBT----- */
 
 const getUserDebts = async () => {
-  const userId = "69d4664b3896a3fbb27ae90d";
-  const debts = await Debt.find({ user_id: userId });
+  const userId = "69d36cc078ba3c41786b27d9";
+  const debts = await Debt.find({ userId: userId });
 
   console.log("User Debts", debts);
 };
@@ -138,7 +171,7 @@ const updateDebt = async () => {
       frequency: "monthly",
       status: "active",
     },
-    { new: true },
+    { new: true }, // { new: true }, // options
   );
   console.log("Updated Debt", debt);
 };
@@ -157,11 +190,8 @@ const deleteDebt = async () => {
 /*-------CREATE PAYMENT----- */
 
 const createPayment = async () => {
-  const user = await User.findById("69d46ac581785778bf7a96f3"); //Rama: Suggest we find by ID because it will be problematic if there are users with the exact same name.
-  const debt = await Debt.findById("69d46baa3cac8e2faca2320d"); //Rama: Suggest we find by ID because it will be problematic if there are Debts with the exact same label.
-
-  await Payment.deleteMany({});
-  console.log("Cleared existing debts.");
+  const user = await User.findOne({ username: "JohnDoe" }); //Rama: Suggest we find by ID because it will be problematic if there are users with the exact same name.
+  const debt = await Debt.findOne({ label: "HDB" }); //Rama: Suggest we find by ID because it will be problematic if there are Debts with the exact same label.
 
   if (!user || !debt) {
     console.log("User or debt not found, run createUser and createDebt first");
@@ -194,7 +224,7 @@ const createPayment = async () => {
 /*-------READ PAYMENT----- */
 
 const findPaymentId = async () => {
-  const id = "69d4664b3896a3fbb27ae90d"; //change the Id as required.
+  const id = "69d3565e3e9ed960ddf9f798"; //change the Id as required.
   const payment = await Payment.findById(id)
     .populate("user_id", "username")
     .populate("debt_id", "label")
@@ -268,18 +298,18 @@ const runQueries = async () => {
   // await findAllUsers();
   // await findUserById();
   // await findUserByUsername();
-  // await deleteUser();
+  await deleteUser();
 
   // --- DEBT ---
   // await createDebt();
   // await getUserDebts();
   // await updateDebt()
-  // await deleteDebt();
+  // await deleteDebt()
 
   // --- PAYMENTS ---
-  await createPayment();
+  // await createPayment();
   // await findAllPayments();
-  // await findPaymentId();
+  // await findPaymentById();
   // await findPaymentsByDebt();
   // await editPayment();
   // await deletePayment();
