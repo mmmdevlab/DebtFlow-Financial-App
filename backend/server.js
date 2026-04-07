@@ -4,8 +4,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
 
-const authRouter = require("./controllers/auth");
-const testJwtRouter = require("./controllers/test-jwt");
+const authRouter = require("./controllers/authController.js");
+const testJwtRouter = require("./controllers/test-jwt.js");
 
 const usersController = require("./controllers/userController.js");
 const debtsController = require("./controllers/debtController.js");
@@ -16,6 +16,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use("/auth", authRouter);
+app.use("/test-jwt", testJwtRouter);
 
 app.get("/api/users", usersController.getAllUsers);
 app.post("/api/users", usersController.createUser);
@@ -35,8 +38,6 @@ app.delete("/api/payments/:paymentId", paymentsController.deletePayment);
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });
-app.use("/auth", authRouter);
-app.use("/test-jwt", testJwtRouter);
 
 mongoose
   .connect(process.env.MONGODB_URI)
