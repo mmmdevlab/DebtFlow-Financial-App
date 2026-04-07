@@ -56,7 +56,7 @@ const findAllUsers = async () => {
 };
 
 const findUserById = async () => {
-  const id = "69d3565e3e9ed960ddf9f792"; //change the Id as required.
+  const id = "69d4664b3896a3fbb27ae90d"; //change the Id as required.
   const user = await User.findById(id);
   console.log("Found user:", user);
 };
@@ -86,8 +86,8 @@ const deleteUser = async () => {
 /*-------CREATE DEBT----- */
 
 const createDebt = async () => {
-  const userId = "69d36cc078ba3c41786b27d9"
-  const user = await User.findById(userId)
+  const userId = "69d46ac581785778bf7a96f3";
+  const user = await User.findById(userId);
 
   const debtsData = [
     {
@@ -106,7 +106,7 @@ const createDebt = async () => {
   console.log("Cleared existing debts.");
 
   for (const debtData of debtsData) {
-    const debt = await Debt.create({...debtData, assignee: user._id});
+    const debt = await Debt.create({ ...debtData, user_id: user._id });
     console.log("New debt added to user:", debt);
   }
 };
@@ -114,17 +114,16 @@ const createDebt = async () => {
 /*-------READ DEBT----- */
 
 const getUserDebts = async () => {
-  const userId = '69d36cc078ba3c41786b27d9'
-  const debts = await Debt.find ({ assignee: userId})
+  const userId = "69d4664b3896a3fbb27ae90d";
+  const debts = await Debt.find({ user_id: userId });
 
-  console.log("User Debts", debts)
-
-}
+  console.log("User Debts", debts);
+};
 
 /*-------EDIT / UPDATE DEBT----- */
 
 const updateDebt = async () => {
-  const debtId = '69d3ddf1e812711f37893c50';
+  const debtId = "69d3ddf1e812711f37893c50";
 
   const debt = await Debt.findByIdAndUpdate(
     debtId, // id
@@ -138,31 +137,31 @@ const updateDebt = async () => {
       due_date: new Date("2046-01-01"),
       frequency: "monthly",
       status: "active",
-    },   
-    { new: true }, // { new: true }, // options
+    },
+    { new: true },
   );
   console.log("Updated Debt", debt);
 };
 
-
 /*-------DELETE DEBT----- */
 
 const deleteDebt = async () => {
-
-  const debtId = '69d3ddf1e812711f37893c50';
+  const debtId = "69d3ddf1e812711f37893c50";
 
   const debt = await Debt.findByIdAndDelete(debtId);
   console.log("Deleted", debt);
 };
-
 
 /*----------------------------------------PAYMENT-----------------------------------------*/
 
 /*-------CREATE PAYMENT----- */
 
 const createPayment = async () => {
-  const user = await User.findOne({ username: "JohnDoe" }); //Rama: Suggest we find by ID because it will be problematic if there are users with the exact same name. 
-  const debt = await Debt.findOne({ label: "HDB" }); //Rama: Suggest we find by ID because it will be problematic if there are Debts with the exact same label. 
+  const user = await User.findById("69d46ac581785778bf7a96f3"); //Rama: Suggest we find by ID because it will be problematic if there are users with the exact same name.
+  const debt = await Debt.findById("69d46baa3cac8e2faca2320d"); //Rama: Suggest we find by ID because it will be problematic if there are Debts with the exact same label.
+
+  await Payment.deleteMany({});
+  console.log("Cleared existing debts.");
 
   if (!user || !debt) {
     console.log("User or debt not found, run createUser and createDebt first");
@@ -195,7 +194,7 @@ const createPayment = async () => {
 /*-------READ PAYMENT----- */
 
 const findPaymentId = async () => {
-  const id = "69d3565e3e9ed960ddf9f798"; //change the Id as required.
+  const id = "69d4664b3896a3fbb27ae90d"; //change the Id as required.
   const payment = await Payment.findById(id)
     .populate("user_id", "username")
     .populate("debt_id", "label")
@@ -275,12 +274,12 @@ const runQueries = async () => {
   // await createDebt();
   // await getUserDebts();
   // await updateDebt()
-  await deleteDebt()
+  // await deleteDebt();
 
   // --- PAYMENTS ---
-  // await createPayment();
+  await createPayment();
   // await findAllPayments();
-  // await findPaymentById();
+  // await findPaymentId();
   // await findPaymentsByDebt();
   // await editPayment();
   // await deletePayment();
