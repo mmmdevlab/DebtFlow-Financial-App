@@ -115,7 +115,14 @@ const deleteUser = async () => {
 /*-------CREATE DEBT----- */
 
 const createDebt = async () => {
-  const userId = "69d36cc078ba3c41786b27d9"
+
+  const users = await User.find({})
+  const randomUser = users[Math.floor(Math.random() * users.length)]
+  const userId = randomUser._id; 
+  await Debt.deleteMany({})
+  console.log("Cleared existing users.")
+
+  // const userId = "69d36cc078ba3c41786b27d9"
   const user = await User.findById(userId)
 
   const debtsData = [
