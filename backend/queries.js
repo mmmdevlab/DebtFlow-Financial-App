@@ -1,5 +1,5 @@
 /*-------------------------------- Starter Code --------------------------------*/
-const { faker } = require('@faker-js/faker');
+const { faker } = require("@faker-js/faker");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -51,24 +51,23 @@ connect();
 // };
 
 const createUser = async () => {
-  await User.deleteMany({})
-  console.log("Cleared existing users.")
+  await User.deleteMany({});
+  console.log("Cleared existing users.");
 
-  const users = []
+  const users = [];
 
   for (let i = 0; i < 10; i++) {
     users.push({
       username: faker.internet.username(),
       hashedPassword: faker.internet.password(),
       email: faker.internet.email(),
-      accountType: faker.helpers.arrayElement(["Personal", "Business"])
-
-    })
+      accountType: faker.helpers.arrayElement(["Personal", "Business"]),
+    });
   }
 
-  const createdUsers = await User.insertMany(users)
-  console.log("Users created:", createdUsers)
-}
+  const createdUsers = await User.insertMany(users);
+  console.log("Users created:", createdUsers);
+};
 
 const findAllUsers = async () => {
   const users = await User.find({});
@@ -76,27 +75,26 @@ const findAllUsers = async () => {
 };
 
 const findUserById = async () => {
-  const users = await User.find({})
-  const randomUser = users[Math.floor(Math.random() * users.length)]
+  const users = await User.find({});
+  const randomUser = users[Math.floor(Math.random() * users.length)];
   const id = randomUser._id; //change the Id as required.
   const user = await User.findById(id);
   console.log("Found by Id:", user);
 };
 
 const findUserByUsername = async () => {
-  const users = await User.find({})
-  const randomUser = users[Math.floor(Math.random() * users.length)]
+  const users = await User.find({});
+  const randomUser = users[Math.floor(Math.random() * users.length)];
 
   const user = await User.findOne({ username: randomUser.username });
   console.log("Found by username:", user);
 };
 
 const deleteUser = async () => {
+  const users = await User.find({});
+  const randomUser = users[Math.floor(Math.random() * users.length)];
 
-  const users = await User.find({})
-  const randomUser = users[Math.floor(Math.random() * users.length)]
-  
-  const id = randomUser._id; 
+  const id = randomUser._id;
   const debts = await Debt.find({ user_id: id });
   const debtIds = debts.map((debt) => debt._id);
 
@@ -115,15 +113,14 @@ const deleteUser = async () => {
 /*-------CREATE DEBT----- */
 
 const createDebt = async () => {
-
-  const users = await User.find({})
-  const randomUser = users[Math.floor(Math.random() * users.length)]
-  const userId = randomUser._id; 
-  await Debt.deleteMany({})
-  console.log("Cleared existing users.")
+  const users = await User.find({});
+  const randomUser = users[Math.floor(Math.random() * users.length)];
+  const userId = randomUser._id;
+  await Debt.deleteMany({});
+  console.log("Cleared existing users.");
 
   // const userId = "69d36cc078ba3c41786b27d9"
-  const user = await User.findById(userId)
+  const user = await User.findById(userId);
 
   const debtsData = [
     {
@@ -142,7 +139,7 @@ const createDebt = async () => {
   console.log("Cleared existing debts.");
 
   for (const debtData of debtsData) {
-    const debt = await Debt.create({...debtData, userId: user._id});
+    const debt = await Debt.create({ ...debtData, userId: user._id });
     console.log("New debt added to user:", debt);
   }
 };
@@ -150,17 +147,16 @@ const createDebt = async () => {
 /*-------READ DEBT----- */
 
 const getUserDebts = async () => {
-  const userId = '69d36cc078ba3c41786b27d9'
-  const debts = await Debt.find({ userId: userId})
+  const userId = "69d36cc078ba3c41786b27d9";
+  const debts = await Debt.find({ userId: userId });
 
-  console.log("User Debts", debts)
-
-}
+  console.log("User Debts", debts);
+};
 
 /*-------EDIT / UPDATE DEBT----- */
 
 const updateDebt = async () => {
-  const debtId = '69d3ddf1e812711f37893c50';
+  const debtId = "69d3ddf1e812711f37893c50";
 
   const debt = await Debt.findByIdAndUpdate(
     debtId, // id
@@ -174,31 +170,28 @@ const updateDebt = async () => {
       due_date: new Date("2046-01-01"),
       frequency: "monthly",
       status: "active",
-    },   
+    },
     { new: true }, // { new: true }, // options
   );
   console.log("Updated Debt", debt);
 };
 
-
 /*-------DELETE DEBT----- */
 
 const deleteDebt = async () => {
-
-  const debtId = '69d3ddf1e812711f37893c50';
+  const debtId = "69d3ddf1e812711f37893c50";
 
   const debt = await Debt.findByIdAndDelete(debtId);
   console.log("Deleted", debt);
 };
-
 
 /*----------------------------------------PAYMENT-----------------------------------------*/
 
 /*-------CREATE PAYMENT----- */
 
 const createPayment = async () => {
-  const user = await User.findOne({ username: "JohnDoe" }); //Rama: Suggest we find by ID because it will be problematic if there are users with the exact same name. 
-  const debt = await Debt.findOne({ label: "HDB" }); //Rama: Suggest we find by ID because it will be problematic if there are Debts with the exact same label. 
+  const user = await User.findOne({ username: "JohnDoe" }); //Rama: Suggest we find by ID because it will be problematic if there are users with the exact same name.
+  const debt = await Debt.findOne({ label: "HDB" }); //Rama: Suggest we find by ID because it will be problematic if there are Debts with the exact same label.
 
   if (!user || !debt) {
     console.log("User or debt not found, run createUser and createDebt first");
