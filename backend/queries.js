@@ -294,11 +294,11 @@ const deletePayment = async () => {
 const runQueries = async () => {
   console.log("Queries running.");
   // --- USERS ---
-  // await createUser();
-  // await findAllUsers();
+  await createUser();
+  await findAllUsers();
   // await findUserById();
   // await findUserByUsername();
-  await deleteUser();
+  // await deleteUser();
 
   // --- DEBT ---
   // await createDebt();

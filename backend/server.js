@@ -6,7 +6,7 @@ const cors = require("cors");
 
 const authRouter = require("./controllers/authController.js");
 const testJwtRouter = require("./controllers/test-jwt.js");
-const verifyToken = require("./middleware/verifyToken");
+const verifyToken = require("./middleware/verify-token.js");
 
 const usersController = require("./controllers/userController.js");
 const debtsController = require("./controllers/debtController.js");

@@ -45,7 +45,6 @@ const AddDebtForm = () => {
     }
   };
 
-  // Shared Tailwind classes for consistency
   const labelStyle =
     "text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1";
   const inputStyle =
@@ -54,7 +53,7 @@ const AddDebtForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-5 max-w-xl mx-auto"
+      className="flex flex-col gap-5 max-w-xl mx-auto border border-gray-200 rounded-xl p-6 bg-white shadow-md"
     >
       <div>
         <h1 className="text-2xl font-extrabold text-gray-900">Add New Debt</h1>

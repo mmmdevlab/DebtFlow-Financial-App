@@ -1,5 +1,8 @@
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { NavLink, Link } from "react-router-dom";
 import { House, ListDashes, Plus, ChartBar, User } from "@phosphor-icons/react";
+import { UserContext } from "../../context/UserContext";
 
 const navLinks = [
   { to: "/dashboard", label: "Dashboard", icon: <House size={22} /> },
@@ -9,17 +12,26 @@ const navLinks = [
   { to: "/account", label: "Account", icon: <User size={22} /> },
 ];
 
-const NavBar = ({ onLogout, isLoggedIn }) => {
+const NavBar = ({ isLoggedIn }) => {
+  const { user, logout } = useContext(UserContext);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/auth/login");
+  };
+
   return (
     <>
       <header className="flex items-center justify-between px-6 h-14 bg-white border-b border-gray-100">
-        <Link to={isLoggedIn ? "/dashboard" : "/auth/login"}>
+        <Link to={user ? "/dashboard" : "/auth/login"}>
           <img src="/Logo_h.svg" alt="DebtFlow" className="h-7" />
         </Link>
 
-        {isLoggedIn && (
+        {user && (
           <button
-            onClick={onLogout}
+            onClick={handleLogout}
             className="px-3 py-1.5 rounded-md text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100"
           >
             Logout

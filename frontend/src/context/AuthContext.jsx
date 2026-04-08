@@ -10,7 +10,6 @@ const handleAuthRequest = async (endpoint, formData) => {
 
     const data = await res.json();
 
-    // Fix: Ensure you check the right key ('err' vs 'error')
     if (data.err || data.error) {
       throw new Error(data.err || data.error);
     }

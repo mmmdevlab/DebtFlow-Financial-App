@@ -26,7 +26,7 @@ const App = () => {
     <div className="min-h-screen bg-gray-50">
       <NavBar onLogout={handleLogout} isLoggedIn={isLoggedIn} />
 
-      <main className={isLoggedIn ? "pt-14 pb-16" : "pt-14"}>
+      <main className={user ? "pt-14 pb-16" : ""}>
         <Routes>
           // open routes
           <Route path="/auth" element={<AuthPage />}>
