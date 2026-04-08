@@ -17,11 +17,12 @@ router.post("/signup", async (req, res) => {
 
     const user = await User.create({
       username: req.body.username,
+      email: req.body.email,
+      accountType: req.body.accountType || "Personal",
       hashedPassword: bcrypt.hashSync(req.body.password, saltRounds),
     });
 
     const payload = { username: user.username, _id: user._id };
-
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
     res.status(201).json({ token });
@@ -34,7 +35,7 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
-      return res.status(401).json({ err: "Invalid credentials." });
+      return res.status(401).json({ error: "User not found" });
     }
 
     const isPasswordCorrect = bcrypt.compareSync(

@@ -6,6 +6,7 @@ const cors = require("cors");
 
 const authRouter = require("./controllers/authController.js");
 const testJwtRouter = require("./controllers/test-jwt.js");
+const verifyToken = require("./middleware/verifyToken");
 
 const usersController = require("./controllers/userController.js");
 const debtsController = require("./controllers/debtController.js");
@@ -20,20 +21,27 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/test-jwt", testJwtRouter);
 
-app.get("/api/users", usersController.getAllUsers);
-app.post("/api/users", usersController.createUser);
-app.get("/api/users/:id", usersController.getUserById);
-app.delete("/api/users/:id", usersController.deleteUser);
+app.get("/api/users", verifyToken, usersController.getAllUsers);
+app.get("/api/users/:id", verifyToken, usersController.getUserById);
+app.delete("/api/users/:id", verifyToken, usersController.deleteUser);
 
-app.get("/api/debts", debtsController.getAllDebts);
-app.post("/api/debts", debtsController.createDebt);
-app.put("/api/debts/:debtId", debtsController.editDebt);
-app.delete("/api/debts/:debtId", debtsController.deleteDebt);
+app.get("/api/debts", verifyToken, debtsController.getAllDebts);
+app.post("/api/debts", verifyToken, debtsController.createDebt);
+app.put("/api/debts/:debtId", verifyToken, debtsController.editDebt);
+app.delete("/api/debts/:debtId", verifyToken, debtsController.deleteDebt);
 
-app.get("/api/payments", paymentsController.getAllPayments);
-app.post("/api/payments", paymentsController.createPayment);
-app.put("/api/payments/:paymentId", paymentsController.editPayment);
-app.delete("/api/payments/:paymentId", paymentsController.deletePayment);
+app.get("/api/payments", verifyToken, paymentsController.getAllPayments);
+app.post("/api/payments", verifyToken, paymentsController.createPayment);
+app.put(
+  "/api/payments/:paymentId",
+  verifyToken,
+  paymentsController.editPayment,
+);
+app.delete(
+  "/api/payments/:paymentId",
+  verifyToken,
+  paymentsController.deletePayment,
+);
 
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
