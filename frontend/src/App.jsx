@@ -1,11 +1,17 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import NavBar from "./components/NavBar/NavBar";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
+import LogInForm from "./components/LoginForm/LogInForm";
+import SignUpForm from "./components/SignUpForm/SignUpForm";
+import NavBar from "./components/NavBar/NavBar";
+
 import DashboardPage from "./pages/DashboardPage";
 import AllDebtsPage from "./pages/AllDebtsPage";
 import LogPage from "./pages/LogPage";
 import InsightsPage from "./pages/InsightsPage";
 import AccountPage from "./pages/AccountPage";
+
+import LoginForm from "./components/LoginForm/LogInForm";
+import SignupForm from "./components/SignUpForm/SignUpForm";
 
 const App = () => {
   const isLoggedIn = true;

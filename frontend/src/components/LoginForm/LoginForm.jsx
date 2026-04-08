@@ -1,30 +1,17 @@
-const SignUpForm = () => {
+const LoginForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("signup submitted");
+    console.log("login submitted");
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
-        <h1 className="text-2xl font-extrabold text-gray-900">
-          Create your account
-        </h1>
+        <h1 className="text-2xl font-extrabold text-gray-900">Welcome back!</h1>
         <p className="text-sm text-gray-400 mt-1">
-          Start tracking your debt today
+          Log in to your DebtFlow account
         </p>
       </div>
-
-      <label className="flex flex-col gap-1">
-        <span className="text-xs font-semibold tracking-widest uppercase text-gray-400">
-          Username
-        </span>
-        <input
-          type="text"
-          placeholder="Type your username"
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
-      </label>
 
       <label className="flex flex-col gap-1">
         <span className="text-xs font-semibold tracking-widest uppercase text-gray-400">
@@ -33,6 +20,7 @@ const SignUpForm = () => {
         <input
           type="email"
           placeholder="Type your email address"
+          required
           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </label>
@@ -44,6 +32,7 @@ const SignUpForm = () => {
         <input
           type="password"
           placeholder="Type your password"
+          required
           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400"
         />
       </label>
@@ -52,10 +41,10 @@ const SignUpForm = () => {
         type="submit"
         className="w-full py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition mt-2"
       >
-        Create account
+        Log in
       </button>
     </form>
   );
 };
 
-export default SignUpForm;
+export default LoginForm;
