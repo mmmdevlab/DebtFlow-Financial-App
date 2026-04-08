@@ -139,7 +139,7 @@ const createDebt = async () => {
   console.log("Cleared existing debts.");
 
   for (const debtData of debtsData) {
-    const debt = await Debt.create({ ...debtData, userId: user._id });
+    const debt = await Debt.create({ ...debtData, user_id: user._id });
     console.log("New debt added to user:", debt);
   }
 };
@@ -301,8 +301,8 @@ const runQueries = async () => {
   // await deleteUser();
 
   // --- DEBT ---
-  // await createDebt();
-  // await getUserDebts();
+  await createDebt();
+  await getUserDebts();
   // await updateDebt()
   // await deleteDebt()
 

@@ -1,19 +1,19 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { Eye, CreditCard, TrendDown, BellSimple } from "@phosphor-icons/react";
+import { Eye, CreditCard, TrendingDown } from "lucide-react";
 
 const benefits = [
   {
-    icon: <Eye size={24} weight="bold" />,
+    icon: <Eye size={24} />,
     title: "Full Visibility",
     desc: "Track all your debts in one place with a clear view of total exposure.",
   },
   {
-    icon: <CreditCard size={24} weight="bold" />,
+    icon: <CreditCard size={24} />,
     title: "Never Miss a Payment",
     desc: "Stay ahead with upcoming due dates and overdue alerts.",
   },
   {
-    icon: <TrendDown size={24} weight="bold" />,
+    icon: <TrendingDown size={24} />,
     title: "See Real Progress",
     desc: "Visualise how every payment reduces your total debt over time.",
   },

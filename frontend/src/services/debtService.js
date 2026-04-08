@@ -1,8 +1,14 @@
-// const res = await fetch("http://localhost:3000/api/debts", {
-//   method: "POST",
-//   headers: {
-//     'Authorization': `Bearer ${localStorage.getItem('token')}`, // Token goes here!
-//     'Content-Type': 'application/json'
-//   },
-//   body: JSON.stringify(debtData)
-// });
+const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/debts`;
+
+const getToken = () => localStorage.getItem("token");
+
+export const getAllDebts = async () => {
+  const res = await fetch(BASE_URL, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Failed to fetch debts");
+  return data;
+};

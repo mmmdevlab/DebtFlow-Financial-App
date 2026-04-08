@@ -25,14 +25,17 @@ const AddDebtForm = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:3000/api/debts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
+      const res = await fetch(
+        `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/debts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      });
+      );
 
       if (res.ok) {
         alert("Debt created successfully!");

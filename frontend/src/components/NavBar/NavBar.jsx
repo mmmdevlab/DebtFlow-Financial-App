@@ -1,14 +1,14 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavLink, Link } from "react-router-dom";
-import { House, ListDashes, Plus, ChartBar, User } from "@phosphor-icons/react";
+import { LayoutDashboard, List, Plus, BarChart2, User } from "lucide-react";
 import { UserContext } from "../../context/UserContext";
 
 const navLinks = [
-  { to: "/dashboard", label: "Dashboard", icon: <House size={22} /> },
-  { to: "/all-debts", label: "Debts", icon: <ListDashes size={22} /> },
+  { to: "/dashboard", label: "Dashboard", icon: <LayoutDashboard size={22} /> },
+  { to: "/all-debts", label: "Debts", icon: <List size={22} /> },
   { to: "/log-entries", label: "Add", icon: <Plus size={22} /> },
-  { to: "/insights", label: "Insights", icon: <ChartBar size={22} /> },
+  { to: "/insights", label: "Insights", icon: <BarChart2 size={22} /> },
   { to: "/account", label: "Account", icon: <User size={22} /> },
 ];
 
