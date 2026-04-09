@@ -25,49 +25,55 @@ connect();
 
 /*----CREATE USER----*/
 
-// const createUser = async () => {
-//   const usersData = [
-//     {
-//       username: "JohnDoe",
-//       hashedPassword: "123",
-//       email: "JohnDoe@gmail.com",
-//       accountType: "Personal",
-//     },
-//     {
-//       username: "JaneDoe",
-//       hashedPassword: "456",
-//       email: "JaneDoe@gmail.com",
-//       accountType: "Personal",
-//     },
-//   ];
-
-//   await User.deleteMany({});
-//   console.log("Cleared existing users.");
-
-//   for (const userData of usersData) {
-//     const user = await User.create(userData);
-//     console.log("New user:", user);
-//   }
-// };
-
 const createUser = async () => {
+  const usersData = [
+    {
+      username: "JohnDoe",
+      hashedPassword: "123",
+      email: "JohnDoe@gmail.com",
+      accountType: "Personal",
+    },
+    {
+      username: "JaneDoe",
+      hashedPassword: "456",
+      email: "JaneDoe@gmail.com",
+      accountType: "Personal",
+    },
+    {
+      username: "test",
+      hashedPassword: "123",
+      email: "testuser@email.com",
+      accountType: "Personal",
+    }
+  ];
+
   await User.deleteMany({});
   console.log("Cleared existing users.");
 
-  const users = [];
-
-  for (let i = 0; i < 10; i++) {
-    users.push({
-      username: faker.internet.username(),
-      hashedPassword: faker.internet.password(),
-      email: faker.internet.email(),
-      accountType: faker.helpers.arrayElement(["Personal", "Business"]),
-    });
+  for (const userData of usersData) {
+    const user = await User.create(userData);
+    console.log("New user:", user);
   }
-
-  const createdUsers = await User.insertMany(users);
-  console.log("Users created:", createdUsers);
 };
+
+// const createUser = async () => {
+//   await User.deleteMany({});
+//   console.log("Cleared existing users.");
+
+//   const users = [];
+
+//   for (let i = 0; i < 10; i++) {
+//     users.push({
+//       username: faker.internet.username(),
+//       hashedPassword: faker.internet.password(),
+//       email: faker.internet.email(),
+//       accountType: faker.helpers.arrayElement(["Personal", "Business"]),
+//     });
+//   }
+
+//   const createdUsers = await User.insertMany(users);
+//   console.log("Users created:", createdUsers);
+// };
 
 const findAllUsers = async () => {
   const users = await User.find({});
@@ -294,16 +300,17 @@ const deletePayment = async () => {
 const runQueries = async () => {
   console.log("Queries running.");
   // --- USERS ---
+
   await createUser();
-  await findAllUsers();
+  // await findAllUsers();
   // await findUserById();
   // await findUserByUsername();
   // await deleteUser();
 
   // --- DEBT ---
-  await createDebt();
-  await getUserDebts();
-  // await updateDebt()
+  // await createDebt();
+  // await getUserDebts();
+  // // await updateDebt()
   // await deleteDebt()
 
   // --- PAYMENTS ---
