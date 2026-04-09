@@ -34,8 +34,36 @@ const AllDebtsPage = () => {
     console.log("edit", debt);
   };
 
-  const handleDelete = (id) => {
-    console.log("delete", id);
+  // const handleDelete = (id) => {
+  //   console.log("delete", id);
+  // };
+
+  const handleDelete = async (id) => {
+    
+    console.log("delete", id)
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(`${import.meta.env.VITE_BACK_END_SERVER_URL}/api/debts/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete debt");
+      }
+
+
+      setDebts((prev) => prev.filter((d) => d._id !== id));
+
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting debt");
+    }
   };
 
   if (loading) return <p className="p-6 text-gray-400">Loading debts...</p>;
@@ -72,8 +100,8 @@ const AllDebtsPage = () => {
             <DebtCard
               key={debt._id}
               debt={debt}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
             />
           ))}
         </div>

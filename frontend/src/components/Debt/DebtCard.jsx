@@ -40,25 +40,25 @@ const statusConfig = {
 
 const DebtCard = ({
   debt,
-  onEdit,
-  onDelete,
+  handleEdit,
+  handleDelete,
   onLogPayment,
   view = "allDebts",
 }) => {
   const status = getStatus(debt);
   const { label, badge, dateClass } = statusConfig[status];
 
-  const handleCardClick = () => {
-    if (view === "dashboard") {
-      onLogPayment?.(debt);
-    } else {
-      onEdit?.(debt);
-    }
-  };
+  // const handleCardClick = () => {
+  //   if (view === "dashboard") {
+  //     onLogPayment?.(debt);
+  //   } else {
+  //     handleEdit?.(debt);
+  //   }
+  // };
 
   return (
     <div
-      onClick={handleCardClick}
+      // onClick={handleCardClick}
       className="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl px-4 py-3 cursor-pointer hover:border-gray-300 transition-colors shadow-sm"
     >
       <div className="min-w-[110px]">
@@ -86,10 +86,16 @@ const DebtCard = ({
       <div className="flex gap-2">
         {view === "allDebts" ? (
           <>
-            <ActionButton onClick={() => onEdit(debt)}>
+            <ActionButton onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(debt);
+              }}>
               <Pencil size={14} />
             </ActionButton>
-            <ActionButton variant="danger" onClick={() => onDelete(debt._id)}>
+            <ActionButton variant="danger" onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(debt._id);
+              }}>
               <Trash2 size={14} />
             </ActionButton>
           </>
