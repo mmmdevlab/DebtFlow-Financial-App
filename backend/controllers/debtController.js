@@ -55,10 +55,10 @@ const editDebt = async (req, res) => {
 /* ------ DELETE -------*/
 const deleteDebt = async (req, res) => {
   try {
-    const debt = await Debt.findByIdAndDelete(req.params.id);
+    const debt = await Debt.findByIdAndDelete(req.params.debtId);
     if (!debt) return res.status(404).json({ error: "Debt not found" });
 
-    await Payment.deleteMany({ debt_id: req.params.id });
+    await Payment.deleteMany({ debt_id: req.params.debtId });
 
     res
       .status(200)
