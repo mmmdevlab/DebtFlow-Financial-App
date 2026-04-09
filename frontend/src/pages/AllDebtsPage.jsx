@@ -23,11 +23,11 @@ const AllDebtsPage = () => {
   }, []);
 
   const handleEdit = (debt) => {
-    console.log("edit", debt); // MATS to add later
+    console.log("edit", debt);
   };
 
   const handleDelete = (id) => {
-    console.log("delete", id); // MATS to add later
+    console.log("delete", id);
   };
 
   if (loading) return <p className="p-6 text-gray-400">Loading debts...</p>;

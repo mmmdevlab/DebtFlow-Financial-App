@@ -1,7 +1,6 @@
 import AddDebtForm from "../components/Debt/AddDebtForm";
 // import { Navigate } from "react-router-dom";
 // import NavBar from "../components/NavBar/NavBar";
-// form to add new debts
 // form to pay debts
 // list of all payments for selected debt
 
