@@ -33,7 +33,7 @@ const debtSchema = new mongoose.Schema(
     },
     frequency: {
       type: String,
-      enum: ["monthly", "annually"],
+      enum: ["monthly", "annually", "one-time payment"],
       required: true,
     },
     status: {
