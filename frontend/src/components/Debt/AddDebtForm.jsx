@@ -16,7 +16,7 @@ const AddDebtForm = () => {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [submittedData, setSubmittedData] = useState(null);  
+  const [submittedData, setSubmittedData] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,22 +43,21 @@ const AddDebtForm = () => {
       );
 
       if (res.ok) {
-        setSubmittedData(formData)
+        setSubmittedData(formData);
 
         setFormData({
-            label: "",
-            category: "mortgage",
-            principle_amount: "",
-            interest_rate: "",
-            current_balance: "",
-            start_date: "",
-            due_date: "",
-            frequency: "monthly",
-            status: "active",
-          });
+          label: "",
+          category: "mortgage",
+          principle_amount: "",
+          interest_rate: "",
+          current_balance: "",
+          start_date: "",
+          due_date: "",
+          frequency: "monthly",
+          status: "active",
+        });
 
         setIsSubmitted(true);
-
       } else {
         alert("Error creating debt");
       }
@@ -68,22 +67,18 @@ const AddDebtForm = () => {
     }
   };
 
-  const labelStyle =
-    "text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1";
-  const inputStyle =
-    "w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition";
-
   return isSubmitted ? (
-  <SuccessView 
-  handleReset={() => setIsSubmitted(false)}
-  submittedData = {submittedData} />
-) : (
-  <FormView
-    formData={formData}
-    handleChange={handleChange}
-    handleSubmit={handleSubmit}
-  />
-);
+    <SuccessView
+      handleReset={() => setIsSubmitted(false)}
+      submittedData={submittedData}
+    />
+  ) : (
+    <FormView
+      formData={formData}
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+    />
+  );
 };
 
 export default AddDebtForm;

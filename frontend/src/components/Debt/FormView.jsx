@@ -10,20 +10,14 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
       onSubmit={handleSubmit}
       className="flex flex-col gap-5 max-w-xl mx-auto border border-gray-200 rounded-xl p-6 bg-white shadow-md"
     >
-      {/* Header */}
       <div>
-        <h1 className="text-2xl font-extrabold text-gray-900">
-          Add New Debt
-        </h1>
+        <h1 className="text-2xl font-extrabold text-gray-900">Add New Debt</h1>
         <p className="text-sm text-gray-400 mt-1">
           Enter the details of your liability below
         </p>
       </div>
 
-      {/* Form Fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-        {/* Debt Name */}
         <label className="flex flex-col col-span-full">
           <span className={labelStyle}>Debt Name</span>
           <input
@@ -37,7 +31,6 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           />
         </label>
 
-        {/* Category */}
         <label className="flex flex-col">
           <span className={labelStyle}>Category</span>
           <select
@@ -52,7 +45,6 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           </select>
         </label>
 
-        {/* Principal Amount */}
         <label className="flex flex-col">
           <span className={labelStyle}>Principal Amount</span>
           <input
@@ -66,7 +58,6 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           />
         </label>
 
-        {/* Interest Rate */}
         <label className="flex flex-col">
           <span className={labelStyle}>Interest Rate (%)</span>
           <input
@@ -80,7 +71,6 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           />
         </label>
 
-        {/* Current Balance */}
         <label className="flex flex-col">
           <span className={labelStyle}>Current Balance</span>
           <input
@@ -93,7 +83,6 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           />
         </label>
 
-        {/* Start Date */}
         <label className="flex flex-col">
           <span className={labelStyle}>Start Date</span>
           <input
@@ -105,7 +94,6 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           />
         </label>
 
-        {/* Due Date */}
         <label className="flex flex-col">
           <span className={labelStyle}>Due Date (Repayment)</span>
           <input
@@ -117,7 +105,6 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           />
         </label>
 
-        {/* Frequency */}
         <label className="flex flex-col">
           <span className={labelStyle}>Frequency</span>
           <select
@@ -131,7 +118,6 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           </select>
         </label>
 
-        {/* Status */}
         <label className="flex flex-col">
           <span className={labelStyle}>Status</span>
           <select
@@ -146,7 +132,6 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
         </label>
       </div>
 
-      {/* Submit Button */}
       <button
         type="submit"
         className="w-full py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition mt-4 shadow-lg shadow-green-100"
