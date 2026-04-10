@@ -19,7 +19,6 @@ const AddDebtForm = ({ selectedData, isEditing, onSubmit }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
 
-  // ✅ Update form when editing different debt
   useEffect(() => {
     if (selectedData) {
       setFormData(selectedData);

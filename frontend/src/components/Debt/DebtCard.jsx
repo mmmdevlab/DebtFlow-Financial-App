@@ -1,4 +1,3 @@
-import React from "react";
 import { Pencil, Trash2, CreditCard } from "lucide-react";
 import ActionButton from "../UI/ActionButton";
 
@@ -57,54 +56,74 @@ const DebtCard = ({
   // };
 
   return (
-    <div
-      // onClick={handleCardClick}
-      className="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl px-4 py-3 cursor-pointer hover:border-gray-300 transition-colors shadow-sm"
-    >
-      <div className="min-w-[110px]">
-        <p className="text-sm font-bold text-gray-900">{debt.label}</p>
-        <p className="text-xs text-gray-400 capitalize">{debt.category}</p>
-      </div>
-
-      <span className="text-lg font-semibold text-gray-900 min-w-[100px]">
-        {formatCurrency(debt.current_balance)}
-      </span>
-
-      <span
-        className={`text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full whitespace-nowrap ${badge}`}
+    <div className="bg-white border border-gray-100 rounded-2xl px-4 py-3 cursor-pointer hover:border-gray-300 transition-colors shadow-sm">
+      <div
+        // onClick={handleCardClick}
+        className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-0"
       >
-        {label}
-      </span>
+        <div className="sm:w-[160px] sm:shrink-0">
+          <p className="text-sm font-bold text-gray-900 truncate">
+            {debt.label}
+          </p>
+          <p className="text-xs text-gray-400 capitalize">{debt.category}</p>
+        </div>
 
-      <div className="flex-1 text-right">
-        <p className="text-[10px] text-gray-400 uppercase font-bold">Due</p>
-        <p className={`text-sm font-medium ${dateClass}`}>
-          {formatDate(debt.due_date)}
-        </p>
-      </div>
+        <div className="sm:w-[130px] sm:shrink-0">
+          <p className="text-lg font-semibold text-gray-900">
+            {formatCurrency(debt.current_balance)}
+          </p>
+        </div>
 
-      <div className="flex gap-2">
-        {view === "allDebts" ? (
-          <>
-            <ActionButton onClick={(e) => {
-              e.stopPropagation();
-              handleEdit(debt);
-              }}>
-              <Pencil size={14} />
+        <div className="sm:w-[90px] sm:shrink-0">
+          <span
+            className={`text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full whitespace-nowrap ${badge}`}
+          >
+            {label}
+          </span>
+        </div>
+
+        {/* Due date */}
+        <div className="sm:flex-1">
+          <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold">
+            Due
+          </p>
+          <p className={`text-sm font-bold ${dateClass}`}>
+            {formatDate(debt.due_date)}
+          </p>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-2 sm:shrink-0">
+          {view === "allDebts" ? (
+            <>
+              <ActionButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit(debt);
+                }}
+              >
+                <Pencil size={14} />
+              </ActionButton>
+              <ActionButton
+                variant="danger"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(debt._id);
+                }}
+              >
+                <Trash2 size={14} />
+              </ActionButton>
+            </>
+          ) : (
+            <ActionButton
+              variant="secondary"
+              onClick={() => onLogPayment(debt)}
+            >
+              <CreditCard size={14} />
+              Pay Now
             </ActionButton>
-            <ActionButton variant="danger" onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(debt._id);
-              }}>
-              <Trash2 size={14} />
-            </ActionButton>
-          </>
-        ) : (
-          <ActionButton variant="secondary" onClick={() => onLogPayment(debt)}>
-            <CreditCard size={14} />
-            Pay Now
-          </ActionButton>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

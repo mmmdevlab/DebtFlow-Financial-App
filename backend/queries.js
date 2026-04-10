@@ -44,7 +44,7 @@ const createUser = async () => {
       hashedPassword: "123",
       email: "testuser@email.com",
       accountType: "Personal",
-    }
+    },
   ];
 
   await User.deleteMany({});
@@ -125,7 +125,6 @@ const createDebt = async () => {
   await Debt.deleteMany({});
   console.log("Cleared existing users.");
 
-  // const userId = "69d36cc078ba3c41786b27d9"
   const user = await User.findById(userId);
 
   const debtsData = [
