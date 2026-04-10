@@ -9,12 +9,8 @@ const AllDebtsPage = () => {
   const [debts, setDebts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-<<<<<<< HEAD
   const [selectedDebt, setSelectedDebt] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-=======
-  const [activeFilter, setActiveFilter] = useState("all"); // 👈 new
->>>>>>> main
 
   useEffect(() => {
     const fetchDebts = async () => {
@@ -47,11 +43,7 @@ const AllDebtsPage = () => {
   // };
 
   const handleDelete = async (id) => {
-<<<<<<< HEAD
   
-=======
-    console.log("delete", id);
->>>>>>> main
 
     try {
       const token = localStorage.getItem("token");
@@ -82,7 +74,6 @@ const AllDebtsPage = () => {
   if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
-<<<<<<< HEAD
   <div className="p-6 max-w-2xl mx-auto">
     <h1>Filter to add on here next</h1>
     <h1 className="text-2xl font-bold text-gray-900 mb-6">All Debts</h1>
@@ -103,32 +94,6 @@ const AllDebtsPage = () => {
     {!isEditing && (
       debts.length === 0 ? (
         <p className="text-gray-400">No debts found. Add one to get started.</p>
-=======
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Debt Entries</h1>
-
-      <div className="flex gap-2 flex-wrap mb-6">
-        {FILTERS.map((filter) => (
-          <button
-            key={filter}
-            onClick={() => setActiveFilter(filter)}
-            className={`
-              px-5 py-2 rounded-full uppercase text-xs font-semibold tracking-widest transition-colors duration-150
-              ${
-                activeFilter === filter
-                  ? "bg-green-500 text-white"
-                  : "bg-neutral-800 text-white hover:bg-neutral-700"
-              }
-            `}
-          >
-            {filter === "all" ? "All" : filter}
-          </button>
-        ))}
-      </div>
-
-      {filteredDebts.length === 0 ? (
-        <p className="text-gray-400">No debts found for this category.</p>
->>>>>>> main
       ) : (
         <div className="flex flex-col gap-3">
           {filteredDebts.map((debt) => (
