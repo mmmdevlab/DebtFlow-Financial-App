@@ -27,8 +27,8 @@ app.delete("/api/users/:id", verifyToken, usersController.deleteUser);
 
 app.get("/api/debts", verifyToken, debtsController.getAllDebts);
 app.post("/api/debts", verifyToken, debtsController.createDebt);
-app.put("/api/debts/:debtId", verifyToken, debtsController.editDebt);
-app.delete("/api/debts/:debtId", verifyToken, debtsController.deleteDebt);
+app.put("/api/debts/:id", verifyToken, debtsController.editDebt);
+app.delete("/api/debts/:id", verifyToken, debtsController.deleteDebt);
 
 app.get("/api/payments", verifyToken, paymentsController.getAllPayments);
 app.post("/api/payments", verifyToken, paymentsController.createPayment);

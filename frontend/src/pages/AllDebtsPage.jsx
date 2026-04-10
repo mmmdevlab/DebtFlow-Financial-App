@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { getAllDebts } from "../services/debtService";
 import DebtCard from "../components/Debt/DebtCard";
+import AddDebtForm from "../components/Debt/AddDebtForm";
 
 const AllDebtsPage = () => {
   const [debts, setDebts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedDebt, setSelectedDebt] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchDebts = async () => {
@@ -24,6 +27,8 @@ const AllDebtsPage = () => {
 
   const handleEdit = (debt) => {
     console.log("edit", debt);
+    setSelectedDebt(debt);
+    setIsEditing(true);
   };
 
   // const handleDelete = (id) => {
@@ -31,8 +36,7 @@ const AllDebtsPage = () => {
   // };
 
   const handleDelete = async (id) => {
-    
-    console.log("delete", id)
+  
 
     try {
       const token = localStorage.getItem("token");
@@ -62,11 +66,25 @@ const AllDebtsPage = () => {
   if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1>Filter to add on here next</h1>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">All Debts</h1>
+  <div className="p-6 max-w-2xl mx-auto">
+    <h1>Filter to add on here next</h1>
+    <h1 className="text-2xl font-bold text-gray-900 mb-6">All Debts</h1>
 
-      {debts.length === 0 ? (
+    {isEditing && (
+      <AddDebtForm
+        selectedData={selectedDebt}
+        isEditing={true}
+        onSubmit={async () => {
+          setIsEditing(false);
+          setSelectedDebt(null);
+          const data = await getAllDebts();
+          setDebts(data);
+        }}
+      />
+    )}
+
+    {!isEditing && (
+      debts.length === 0 ? (
         <p className="text-gray-400">No debts found. Add one to get started.</p>
       ) : (
         <div className="flex flex-col gap-3">
@@ -79,9 +97,10 @@ const AllDebtsPage = () => {
             />
           ))}
         </div>
-      )}
-    </div>
-  );
+      )
+    )}
+  </div>
+);
 };
 
 export default AllDebtsPage;
