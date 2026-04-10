@@ -10,11 +10,16 @@ const AllDebtsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [selectedDebt, setSelectedDebt] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 =======
   const [activeFilter, setActiveFilter] = useState("all"); // 👈 new
 >>>>>>> main
+=======
+  const [selectedDebt, setSelectedDebt] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+>>>>>>> ramav2
 
   useEffect(() => {
     const fetchDebts = async () => {
@@ -48,10 +53,14 @@ const AllDebtsPage = () => {
 
   const handleDelete = async (id) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
   
 =======
     console.log("delete", id);
 >>>>>>> main
+=======
+  
+>>>>>>> ramav2
 
     try {
       const token = localStorage.getItem("token");
@@ -83,6 +92,9 @@ const AllDebtsPage = () => {
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ramav2
   <div className="p-6 max-w-2xl mx-auto">
     <h1>Filter to add on here next</h1>
     <h1 className="text-2xl font-bold text-gray-900 mb-6">All Debts</h1>
