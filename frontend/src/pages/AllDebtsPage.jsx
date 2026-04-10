@@ -39,27 +39,27 @@ const AllDebtsPage = () => {
   // };
 
   const handleDelete = async (id) => {
-    
-    console.log("delete", id)
+    console.log("delete", id);
 
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`${import.meta.env.VITE_BACK_END_SERVER_URL}/api/debts/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/debts/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to delete debt");
       }
 
-
       setDebts((prev) => prev.filter((d) => d._id !== id));
-
     } catch (err) {
       console.error(err);
       alert("Error deleting debt");
@@ -79,7 +79,7 @@ const AllDebtsPage = () => {
             key={filter}
             onClick={() => setActiveFilter(filter)}
             className={`
-              px-5 py-2 rounded-full uppercase text-xs font-bold tracking-widest transition-colors duration-150
+              px-5 py-2 rounded-full uppercase text-xs font-semibold tracking-widest transition-colors duration-150
               ${
                 activeFilter === filter
                   ? "bg-green-500 text-white"
