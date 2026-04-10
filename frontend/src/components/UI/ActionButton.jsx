@@ -8,7 +8,7 @@ const ActionButton = ({
   ...props
 }) => {
   const baseStyles =
-    "flex items-center justify-center gap-2 rounded-lg transition-all active:scale-95 flex-shrink-0 font-bold text-xs";
+    "flex items-center justify-center gap-2 rounded-full transition-all active:scale-95 flex-shrink-0 font-bold text-xs";
 
   // Variant styles
   const variants = {

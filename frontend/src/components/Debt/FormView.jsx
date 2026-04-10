@@ -8,7 +8,7 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-5 max-w-xl mx-auto border border-gray-200 rounded-xl p-6 bg-white shadow-md"
+      className="flex flex-col gap-5 max-w-xl min-w-auto border border-gray-200 rounded-xl p-6 bg-white shadow-md"
     >
       <div>
         <h1 className="text-2xl font-extrabold text-gray-900">Add New Debt</h1>
@@ -115,7 +115,7 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           >
             <option value="monthly">Monthly</option>
             <option value="annually">Annually</option>
-            <option value="annually">One-time payment</option>
+            <option value="one-time">One-time payment</option>
           </select>
         </label>
 
