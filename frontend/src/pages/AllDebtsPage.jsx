@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getAllDebts } from "../services/debtService";
 import DebtCard from "../components/Debt/DebtCard";
+import AddDebtForm from "../components/Debt/AddDebtForm";
 
 const FILTERS = ["all", "credit card", "mortgage", "loan", "other"];
 
@@ -8,7 +9,12 @@ const AllDebtsPage = () => {
   const [debts, setDebts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+<<<<<<< HEAD
+  const [selectedDebt, setSelectedDebt] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+=======
   const [activeFilter, setActiveFilter] = useState("all"); // 👈 new
+>>>>>>> main
 
   useEffect(() => {
     const fetchDebts = async () => {
@@ -32,6 +38,8 @@ const AllDebtsPage = () => {
 
   const handleEdit = (debt) => {
     console.log("edit", debt);
+    setSelectedDebt(debt);
+    setIsEditing(true);
   };
 
   // const handleDelete = (id) => {
@@ -39,7 +47,11 @@ const AllDebtsPage = () => {
   // };
 
   const handleDelete = async (id) => {
+<<<<<<< HEAD
+  
+=======
     console.log("delete", id);
+>>>>>>> main
 
     try {
       const token = localStorage.getItem("token");
@@ -70,6 +82,28 @@ const AllDebtsPage = () => {
   if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
+<<<<<<< HEAD
+  <div className="p-6 max-w-2xl mx-auto">
+    <h1>Filter to add on here next</h1>
+    <h1 className="text-2xl font-bold text-gray-900 mb-6">All Debts</h1>
+
+    {isEditing && (
+      <AddDebtForm
+        selectedData={selectedDebt}
+        isEditing={true}
+        onSubmit={async () => {
+          setIsEditing(false);
+          setSelectedDebt(null);
+          const data = await getAllDebts();
+          setDebts(data);
+        }}
+      />
+    )}
+
+    {!isEditing && (
+      debts.length === 0 ? (
+        <p className="text-gray-400">No debts found. Add one to get started.</p>
+=======
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Debt Entries</h1>
 
@@ -94,6 +128,7 @@ const AllDebtsPage = () => {
 
       {filteredDebts.length === 0 ? (
         <p className="text-gray-400">No debts found for this category.</p>
+>>>>>>> main
       ) : (
         <div className="flex flex-col gap-3">
           {filteredDebts.map((debt) => (
@@ -105,9 +140,10 @@ const AllDebtsPage = () => {
             />
           ))}
         </div>
-      )}
-    </div>
-  );
+      )
+    )}
+  </div>
+);
 };
 
 export default AllDebtsPage;
