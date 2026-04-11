@@ -8,6 +8,12 @@ const getUserFromToken = () => {
 
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
+    const isExpired = payload.exp * 1000 < Date.now();
+    if (isExpired) {
+      localStorage.removeItem("token");
+      return null;
+    }
+
     return payload.payload || payload;
   } catch (error) {
     console.error("Failed to parse token:", error);

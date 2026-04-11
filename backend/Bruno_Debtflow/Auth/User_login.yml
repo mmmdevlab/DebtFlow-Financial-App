@@ -8,10 +8,10 @@ http:
   url: "{{BASE_URL}}/auth/login"
   body:
     type: json
-    data: |
-      body: { 
-        username: " ", 
-        hashedPassword: " ",
+    data: |-
+      {
+        "username": "JohnDoe",
+        "password": "123"
       }
   auth: inherit
 

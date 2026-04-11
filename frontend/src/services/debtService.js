@@ -1,14 +1,25 @@
-const BASE_URL = `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/debts`;
-
-const getToken = () => localStorage.getItem("token");
+import { apiFetch } from "./api";
 
 export const getAllDebts = async () => {
-  const res = await fetch(BASE_URL, {
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
+  return apiFetch("/debts");
+};
+
+export const createDebt = async (debtData) => {
+  return apiFetch("/debts", {
+    method: "POST",
+    body: JSON.stringify(debtData),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Failed to fetch debts");
-  return data;
+};
+
+export const updateDebt = async (id, debtData) => {
+  return apiFetch(`/debts/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(debtData),
+  });
+};
+
+export const deleteDebt = async (id) => {
+  return apiFetch(`/debts/${id}`, {
+    method: "DELETE",
+  });
 };

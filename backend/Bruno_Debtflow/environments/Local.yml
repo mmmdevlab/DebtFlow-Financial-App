@@ -1,4 +1,6 @@
 name: Local
 variables:
   - name: BASE_URL
-    value: http://localhost:3000/api
+    value: http://localhost:3000
+  - name: TOKEN
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InVzZXJuYW1lIjoiSm9obkRvZSIsIl9pZCI6IjY5ZDljOTNkMGUwMmUxZTMzNGU2MjQ4OSJ9LCJpYXQiOjE3NzU5MDAwODF9.BrbxKXcg3BbY_GQlkZk12LVNqjET9ep8LJGo2xf_ZCQ

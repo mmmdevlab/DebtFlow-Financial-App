@@ -5,18 +5,15 @@ info:
 
 http:
   method: POST
-  url: "{{BASE_URL}}/debts/:debtId/payments"
-  params:
-    - name: debtId
-      value: xxx
-      type: path
+  url: "{{BASE_URL}}/api/payments"
   body:
     type: json
     data: |-
-      body: { 
-        amount_paid: " ", 
-        payment_date: " ", 
-        notes: " ",
+      {
+        "user_id": "PASTE_USER_ID_HERE",
+        "debt_id": "PASTE_DEBT_ID_HERE",
+        "amount": 500,
+        "payment_date": "2026-04-11"
       }
   auth: inherit
 

@@ -21,30 +21,24 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/test-jwt", testJwtRouter);
 
+app.get("/api/users/profile", verifyToken, usersController.getUserProfile);
 app.get("/api/users", verifyToken, usersController.getAllUsers);
 app.get("/api/users/:id", verifyToken, usersController.getUserById);
 app.delete("/api/users/:id", verifyToken, usersController.deleteUser);
 
 app.get("/api/debts", verifyToken, debtsController.getAllDebts);
 app.post("/api/debts", verifyToken, debtsController.createDebt);
+app.get("/api/debts/:id", verifyToken, debtsController.getDebtById);
 app.put("/api/debts/:id", verifyToken, debtsController.editDebt);
 app.delete("/api/debts/:id", verifyToken, debtsController.deleteDebt);
 
 app.get("/api/payments", verifyToken, paymentsController.getAllPayments);
 app.post("/api/payments", verifyToken, paymentsController.createPayment);
-app.put(
-  "/api/payments/:paymentId",
-  verifyToken,
-  paymentsController.editPayment,
-);
-app.delete(
-  "/api/payments/:paymentId",
-  verifyToken,
-  paymentsController.deletePayment,
-);
+app.put("/api/payments/:id", verifyToken, paymentsController.editPayment);
+app.delete("/api/payments/:id", verifyToken, paymentsController.deletePayment);
 
 app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
+  res.status(404).json({ err: "Route not found" });
 });
 
 mongoose
@@ -54,6 +48,6 @@ mongoose
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => {
-    console.error("MongoDB connection error:", err.message);
+    console.error("MongoDB connection err:", err.message);
     process.exit(1);
   });

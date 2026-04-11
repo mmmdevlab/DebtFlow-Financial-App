@@ -5,21 +5,17 @@ info:
 
 http:
   method: PUT
-  url: "{{BASE_URL}}/debts/:debtId/payments/:paymentId"
+  url: "{{BASE_URL}}/api/payments/:id"
   params:
-    - name: paymentId
-      value: xxx
-      type: path
-    - name: debtId
-      value: xxx
+    - name: id
+      value: PASTE_PAYMENT_ID_HERE
       type: path
   body:
     type: json
     data: |-
-      body: { 
-        amount_paid: " ", 
-        payment_date: " ", 
-        notes: " ",
+      {
+        "amount": 750,
+        "payment_date": "2026-04-11"
       }
   auth: inherit
 

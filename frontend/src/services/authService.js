@@ -26,7 +26,5 @@ const handleAuthRequest = async (endpoint, formData) => {
   }
 };
 
-const signUp = (formData) => handleAuthRequest("signup", formData);
-const logIn = (formData) => handleAuthRequest("login", formData);
-
-export { signUp, logIn };
+export const signUp = (formData) => handleAuthRequest("signup", formData);
+export const logIn = (formData) => handleAuthRequest("login", formData);

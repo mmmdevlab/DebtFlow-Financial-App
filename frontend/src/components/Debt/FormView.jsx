@@ -115,7 +115,7 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
           >
             <option value="monthly">Monthly</option>
             <option value="annually">Annually</option>
-            <option value="one-time">One-time payment</option>
+            <option value="one-time payment">One-time payment</option>
           </select>
         </label>
 

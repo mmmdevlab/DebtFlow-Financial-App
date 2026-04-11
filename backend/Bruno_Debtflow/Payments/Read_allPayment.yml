@@ -5,11 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{BASE_URL}}/debts/:debtId/payments"
-  params:
-    - name: debtId
-      value: xxx
-      type: path
+  url: "{{BASE_URL}}/api/payments"
   auth: inherit
 
 settings:

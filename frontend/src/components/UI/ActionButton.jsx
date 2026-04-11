@@ -10,10 +10,9 @@ const ActionButton = ({
   const baseStyles =
     "flex items-center justify-center gap-2 rounded-full transition-all active:scale-95 flex-shrink-0 font-bold text-xs";
 
-  // Variant styles
   const variants = {
     primary: "bg-gray-900 text-white hover:bg-gray-700",
-    danger: "bg-red-500 text-white hover:bg-red-600",
+    danger: "bg-red-500 text-white hover:bg-red-700",
     secondary: "bg-blue-600 text-white hover:bg-blue-700",
     outline: "border border-gray-200 text-gray-600 hover:bg-gray-50",
   };

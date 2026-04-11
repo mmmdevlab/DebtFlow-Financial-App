@@ -5,23 +5,24 @@ info:
 
 http:
   method: PUT
-  url: "{{BASE_URL}}/debts/:debtsId"
+  url: "{{BASE_URL}}/api/debts/:id"
   params:
-    - name: debtsId
-      value: xxx
+    - name: id
+      value: PASTE_DEBT_ID_HERE
       type: path
   body:
     type: json
     data: |-
-      data: {
-        "creditor_name": "DBS Bank",
-        "category": "Credit Card",
-        "total_amount": 2000,
-        "monthly_amount": 500,
-        "due_date": "2026-05-27",
-        "interest_rate": 25.0,
-        "frequency": "Monthly",
-        "late_fee": 100,
+      {
+        "label": "DBS Credit Card Updated",
+        "category": "creditCard",
+        "principle_amount": 2000,
+        "interest_rate": 20.0,
+        "current_balance": 1500,
+        "start_date": "2026-01-01",
+        "due_date": "2026-06-01",
+        "frequency": "monthly",
+        "status": "active"
       }
   auth: inherit
 

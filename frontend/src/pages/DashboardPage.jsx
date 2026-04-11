@@ -1,43 +1,20 @@
-import UpcomingPaymentCard from "../components/Debt/UpcomingPaymentCard";
-import { useState, useEffect } from "react";
-import { getAllDebts } from "../services/debtService";
+import { useContext } from "react";
+import { DebtContext } from "../context/DebtContext";
+
+const formatCurrency = (amount) =>
+  new Intl.NumberFormat("en-SG", {
+    style: "currency",
+    currency: "SGD",
+  }).format(amount);
 
 const DashboardPage = () => {
-  const [debts, setDebts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { debts, loading, error } = useContext(DebtContext);
 
-  useEffect(() => {
-    const fetchDebts = async () => {
-      try {
-        const data = await getAllDebts();
-        setDebts(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDebts();
-  }, []);
-
-  const totalDebt = debts.reduce(
-    (sum, d) => sum + Number(d.current_balance || 0),
-    0
-  );
-
-  const activeDebts = debts.filter((d) => d.status === "active").length;
-
-  const overdueDebts = debts.filter(
-    (d) => new Date(d.due_date) < new Date() && d.status !== "paidOff"
+  const totalDebt = debts.reduce((sum, d) => sum + d.current_balance, 0);
+  const activeCount = debts.filter((d) => d.status === "active").length;
+  const overdueCount = debts.filter(
+    (d) => new Date(d.due_date) < new Date() && d.status !== "paidOff",
   ).length;
-
-  const formatCurrency = (amount) =>
-    new Intl.NumberFormat("en-SG", {
-      style: "currency",
-      currency: "SGD",
-    }).format(amount);
 
   if (loading) return <p className="p-6 text-gray-400">Loading...</p>;
   if (error) return <p className="p-6 text-red-500">{error}</p>;
@@ -62,16 +39,14 @@ const DashboardPage = () => {
           <p className="text-sm uppercase tracking-widest font-semibold">
             Active Debts
           </p>
-          <p className="text-3xl font-bold mt-1">{activeDebts}</p>
+          <p className="text-3xl font-bold text-gray-900 mt-1">{activeCount}</p>
         </div>
 
         <div className="w-full rounded-xl p-5 bg-red-200">
           <p className="text-sm uppercase tracking-widest font-semibold">
             Overdue
           </p>
-          <p className="text-3xl font-bold text-red-500 mt-1">
-            {overdueDebts}
-          </p>
+          <p className="text-3xl font-bold text-red-500 mt-1">{overdueCount}</p>
         </div>
       </div>
 
