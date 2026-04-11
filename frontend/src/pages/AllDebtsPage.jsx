@@ -27,10 +27,10 @@ const AllDebtsPage = () => {
     fetchDebts();
   }, []);
 
-  const filteredDebts =
-    activeFilter === "all"
-      ? debts
-      : debts.filter((debt) => debt.category === activeFilter);
+  // const filteredDebts =
+  //   activeFilter === "all"
+  //     ? debts
+  //     : debts.filter((debt) => debt.category === activeFilter);
 
   const handleEdit = (debt) => {
     console.log("edit", debt);
@@ -96,7 +96,7 @@ const AllDebtsPage = () => {
         <p className="text-gray-400">No debts found. Add one to get started.</p>
       ) : (
         <div className="flex flex-col gap-3">
-          {filteredDebts.map((debt) => (
+          {debts.map((debt) => (
             <DebtCard
               key={debt._id}
               debt={debt}
