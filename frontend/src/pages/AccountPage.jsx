@@ -1,72 +1,93 @@
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { getUserProfile } from "../services/userService";
+
 import ActionButton from "../components/UI/ActionButton";
 import { Trash2 } from "lucide-react";
 
 const AccountPage = () => {
-  //later need to fetch user data from backend and use that instead of hardcoded data
-  const user = {
-    username: "testuser",
-    hashedPassword: "password123",
-    email: "testuser@email.com",
-    accountType: "Personal",
-    createdAt: "2024-01-01",
-  };
-  const initials = user.username.slice(0, 2).toUpperCase();
+  const { user: authUser, logout } = useContext(UserContext);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleDelete = () => {
-    //TO to - wire up delete /user/:id
-    console.log("Delete account");
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getUserProfile();
+        setProfile(data);
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (authUser) fetchProfile();
+  }, [authUser]);
+
+  const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete your account? This will also delete all your debts and payment history. This action cannot be undone.",
+    );
+
+    if (confirmDelete) {
+      try {
+        // add call delete service here
+        // await deleteUser(profile._id);
+        alert("Account deleted successfully.");
+        logout();
+      } catch (error) {
+        console.error("Failed to delete account", error);
+      }
+    }
   };
+
+  if (loading)
+    return <p className="text-center mt-10">Loading account details...</p>;
 
   return (
-    <div className="flex items-top justify-center p-6">
-      <div className="w-full max-w-md bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-        <div className="flex items-center gap-4 px-6 py-5 border-b border-gray-100">
-          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm flex-shrink-0">
-            {initials}
-          </div>
-          <div>
-            <p className="text-xl font-bold text-gray-800">{user.username}</p>
-            <p className="text-xs text-gray-400">{user.accountType} Account</p>
-          </div>
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Account Details</h2>
+
+      <div className="space-y-4">
+        <div className="border-b pb-2">
+          <p className="text-sm text-gray-500 uppercase font-bold">Username</p>
+          <p className="text-lg text-gray-900">{profile?.username}</p>
         </div>
 
-        <div className="px-6 py-1">
-          {[
-            { label: "Username", value: user.username },
-            { label: "Email", value: user.email },
-            { label: "Password", value: "••••••••", muted: true },
-            { label: "Date joined", value: user.createdAt },
-          ].map((row, i, arr) => (
-            <div
-              key={row.label}
-              className={`flex justify-between items-center py-3 ${
-                i < arr.length - 1 ? "border-b border-gray-100" : ""
-              }`}
-            >
-              <span className="text-xs text-gray-400 uppercase tracking-[20%] font-semibold">
-                {row.label}
-              </span>
-              <span
-                className={`text-sm ${row.muted ? "text-gray-400 tracking-widest" : "text-gray-800"}`}
-              >
-                {row.value}
-              </span>
-            </div>
-          ))}
+        <div className="border-b pb-2">
+          <p className="text-sm text-gray-500 uppercase font-bold">Email</p>
+          <p className="text-lg text-gray-900">{profile?.email}</p>
         </div>
 
-        <div className="px-6 py-5 border-t border-gray-100">
-          <ActionButton
-            variant="danger"
-            onClick={handleDelete}
-            className="w-full py-2.5 rounded-full"
-          >
-            <Trash2 size={14} />
-            Delete account
-          </ActionButton>
+        <div className="border-b pb-2">
+          <p className="text-sm text-gray-500 uppercase font-bold">
+            Account Type
+          </p>
+          <p className="text-lg text-gray-900 capitalize">
+            {profile?.accountType || "Standard User"}
+          </p>
         </div>
+      </div>
+
+      <div className="mt-8 flex justify-between items-end">
+        <div>
+          <p className="text-xs text-gray-400 italic">
+            User ID: {profile?._id}
+          </p>
+        </div>
+
+        <ActionButton
+          onClick={handleDeleteAccount}
+          variant="danger"
+          className="flex items-center gap-2"
+        >
+          <Trash2 size={16} />
+          Delete Account
+        </ActionButton>
       </div>
     </div>
   );
 };
+
 export default AccountPage;
