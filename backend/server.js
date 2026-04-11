@@ -22,10 +22,10 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/test-jwt", testJwtRouter);
 
+app.get("/api/users/profile", verifyToken, userController.getUserProfile);
 app.get("/api/users", verifyToken, usersController.getAllUsers);
 app.get("/api/users/:id", verifyToken, usersController.getUserById);
 app.delete("/api/users/:id", verifyToken, usersController.deleteUser);
-app.get("/api/users/profile", verifyToken, userController.getUserProfile);
 
 app.get("/api/debts", verifyToken, debtsController.getAllDebts);
 app.post("/api/debts", verifyToken, debtsController.createDebt);
