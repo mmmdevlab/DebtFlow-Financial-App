@@ -6,7 +6,6 @@ const cors = require("cors");
 
 const authRouter = require("./controllers/authController.js");
 const testJwtRouter = require("./controllers/test-jwt.js");
-const userController = require("./controllers/userController");
 const verifyToken = require("./middleware/verify-token.js");
 
 const usersController = require("./controllers/userController.js");
@@ -22,7 +21,7 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/test-jwt", testJwtRouter);
 
-app.get("/api/users/profile", verifyToken, userController.getUserProfile);
+app.get("/api/users/profile", verifyToken, usersController.getUserProfile);
 app.get("/api/users", verifyToken, usersController.getAllUsers);
 app.get("/api/users/:id", verifyToken, usersController.getUserById);
 app.delete("/api/users/:id", verifyToken, usersController.deleteUser);
