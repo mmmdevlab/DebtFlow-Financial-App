@@ -1,17 +1,14 @@
 info:
-  name: Delete_ removePayment
+  name: Delete_removePayment
   type: http
   seq: 4
 
 http:
   method: DELETE
-  url: "{{BASE_URL}}/debts/:debtId/payments/:paymentId"
+  url: "{{BASE_URL}}/api/payments/:id"
   params:
-    - name: paymentId
-      value: xxx
-      type: path
-    - name: debtId
-      value: xxx
+    - name: id
+      value: PASTE_PAYMENT_ID_HERE
       type: path
   auth: inherit
 

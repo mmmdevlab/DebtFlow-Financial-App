@@ -1,77 +1,51 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import FormView from "./FormView";
 import SuccessView from "./SuccessView";
+import { createDebt, updateDebt } from "../../services/debtService";
+
+const initialState = {
+  label: "",
+  category: "mortgage",
+  principle_amount: 0,
+  interest_rate: 0,
+  current_balance: 0,
+  start_date: "",
+  due_date: "",
+  frequency: "monthly",
+  status: "active",
+};
 
 const AddDebtForm = ({ selectedData, isEditing, onSubmit }) => {
-  const initialState = {
-    label: "",
-    category: "mortgage",
-    principle_amount: "",
-    interest_rate: "",
-    current_balance: "",
-    start_date: "",
-    due_date: "",
-    frequency: "monthly",
-    status: "active",
-  };
-
-  const [formData, setFormData] = useState(selectedData || initialState);
+  const [formData, setFormData] = useState(
+    isEditing && selectedData ? selectedData : initialState,
+  );
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
 
-  useEffect(() => {
-    if (selectedData) {
-      setFormData(selectedData);
-    }
-  }, [selectedData]);
-
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    const finalValue = type === "number" ? parseFloat(value) || 0 : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: finalValue,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const token = localStorage.getItem("token");
-
-    const url = isEditing
-      ? `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/debts/${selectedData._id}`
-      : `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/debts`;
-
-    const method = isEditing ? "PUT" : "POST";
-
     try {
-      const res = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to save debt");
-      }
-
       if (isEditing) {
-        onSubmit?.();
-        return;
+        await updateDebt(selectedData?._id, formData);
+      } else {
+        await createDebt(formData);
+        setSubmittedData(formData);
+        setIsSubmitted(true);
       }
-
-      setSubmittedData(formData);
-      setFormData(initialState);
-      setIsSubmitted(true);
-
       onSubmit?.();
-
-    } catch (err) {
-      console.error(err);
-      alert("Error connecting to server");
+    } catch (error) {
+      console.error("Submission Error:", error);
+      alert("Error connecting to server.");
     }
   };
 

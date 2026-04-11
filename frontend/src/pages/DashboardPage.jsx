@@ -1,4 +1,24 @@
+import { useContext } from "react";
+import { DebtContext } from "../context/DebtContext";
+
+const formatCurrency = (amount) =>
+  new Intl.NumberFormat("en-SG", {
+    style: "currency",
+    currency: "SGD",
+  }).format(amount);
+
 const DashboardPage = () => {
+  const { debts, loading, error } = useContext(DebtContext);
+
+  const totalDebt = debts.reduce((sum, d) => sum + d.current_balance, 0);
+  const activeCount = debts.filter((d) => d.status === "active").length;
+  const overdueCount = debts.filter(
+    (d) => new Date(d.due_date) < new Date() && d.status !== "paidOff",
+  ).length;
+
+  if (loading) return <p className="p-6 text-gray-400">Loading...</p>;
+  if (error) return <p className="p-6 text-red-500">{error}</p>;
+
   return (
     <div className="flex flex-col gap-5 max-w-xl mx-auto p-6">
       <h1 className="text-2xl font-bold text-gray-900">Your Dashboard</h1>
@@ -7,21 +27,23 @@ const DashboardPage = () => {
         <p className="text-sm text-black uppercase tracking-widest font-semibold">
           Total Debt
         </p>
-        <p className="text-3xl font-bold text-gray-900 mt-1">$0.00</p>
+        <p className="text-3xl font-bold text-gray-900 mt-1">
+          {formatCurrency(totalDebt)}
+        </p>
       </div>
       <div className="flex flex-row gap-5">
         <div className="w-full rounded-xl p-5 bg-blue-200">
           <p className="text-sm text-black uppercase tracking-widest font-semibold">
             Active Debts
           </p>
-          <p className="text-3xl font-bold text-gray-900 mt-1">0</p>
+          <p className="text-3xl font-bold text-gray-900 mt-1">{activeCount}</p>
         </div>
 
         <div className="w-full rounded-xl p-5 bg-red-200">
           <p className="text-sm text-black uppercase tracking-widest font-semibold">
             Overdue
           </p>
-          <p className="text-3xl font-bold text-red-500 mt-1">0</p>
+          <p className="text-3xl font-bold text-red-500 mt-1">{overdueCount}</p>
         </div>
       </div>
       <p className="text-gray-500 font-medium mt-2">Upcoming debt tickets</p>

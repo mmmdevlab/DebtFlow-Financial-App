@@ -16,13 +16,13 @@ const getAllDebts = async (req, res) => {
 const getDebtById = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ error: "Invalid debt id" });
+      return res.status(400).json({ err: "Invalid debt id" });
     }
     const debt = await Debt.findById(req.params.id);
-    if (!debt) return res.status(404).json({ error: "Debt not found" });
+    if (!debt) return res.status(404).json({ err: "Debt not found" });
     res.status(200).json(debt);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ err: err.message });
   }
 };
 
@@ -35,7 +35,7 @@ const createDebt = async (req, res) => {
     });
     res.status(201).json(debt);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ err: err.message });
   }
 };
 
@@ -45,26 +45,26 @@ const editDebt = async (req, res) => {
     const debt = await Debt.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!debt) return res.status(404).json({ error: "Debt not found" });
+    if (!debt) return res.status(404).json({ err: "Debt not found" });
     res.status(200).json(debt);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ err: err.message });
   }
 };
 
 /* ------ DELETE -------*/
 const deleteDebt = async (req, res) => {
   try {
-    const debt = await Debt.findByIdAndDelete(req.params.id, req.body, {new: true});
-    if (!debt) return res.status(404).json({ error: "Debt not found" });
+    const debt = await Debt.findByIdAndDelete(req.params.id);
+    if (!debt) return res.status(404).json({ err: "Debt not found" });
 
-    await Payment.deleteMany({ debt_id: req.params.debtId });
+    await Payment.deleteMany({ debt_id: req.params.id });
 
     res
       .status(200)
       .json({ message: "Debt and related payments deleted", debt });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ err: err.message });
   }
 };
 

@@ -5,10 +5,10 @@ info:
 
 http:
   method: GET
-  url: "{{BASE_URL}}/debts/:debtsId"
+  url: "{{BASE_URL}}/api/debts/:id"
   params:
-    - name: debtsId
-      value: xxx
+    - name: id
+      value: PASTE_DEBT_ID_HERE
       type: path
   auth: inherit
 

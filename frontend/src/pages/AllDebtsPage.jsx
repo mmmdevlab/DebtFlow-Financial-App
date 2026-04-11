@@ -1,33 +1,17 @@
-import { useState, useEffect } from "react";
-import { getAllDebts } from "../services/debtService";
+import { useState, useContext } from "react";
+import { DebtContext } from "../context/DebtContext";
+import { deleteDebt } from "../services/debtService";
 import DebtCard from "../components/Debt/DebtCard";
 import AddDebtForm from "../components/Debt/AddDebtForm";
 
 const FILTERS = ["all", "creditCard", "mortgage", "loan"];
 
 const AllDebtsPage = () => {
-  const [debts, setDebts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { debts, loading, error, refetch } = useContext(DebtContext);
 
   const [selectedDebt, setSelectedDebt] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [activeFilter, setActiveFilter] = useState("all");
-
-  const fetchDebts = async () => {
-    try {
-      const data = await getAllDebts();
-      setDebts(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDebts();
-  }, []);
 
   const filteredDebts =
     activeFilter === "all"
@@ -41,21 +25,8 @@ const AllDebtsPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-
-      const res = await fetch(
-        `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/debts/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to delete debt");
-
-      setDebts((prev) => prev.filter((d) => d._id !== id));
+      await deleteDebt(id);
+      await refetch();
     } catch (err) {
       console.error(err);
       alert("Error deleting debt");
@@ -69,7 +40,6 @@ const AllDebtsPage = () => {
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">All Debts</h1>
 
-      {/* EDIT FORM */}
       {isEditing && (
         <AddDebtForm
           selectedData={selectedDebt}
@@ -77,15 +47,13 @@ const AllDebtsPage = () => {
           onSubmit={async () => {
             setIsEditing(false);
             setSelectedDebt(null);
-            await fetchDebts();
+            await refetch();
           }}
         />
       )}
 
-      {/* MAIN LIST VIEW */}
       {!isEditing && (
-        <>
-          {/* FILTERS */}
+        <div>
           <div className="flex gap-2 flex-wrap mb-6">
             {FILTERS.map((filter) => (
               <button
@@ -103,11 +71,8 @@ const AllDebtsPage = () => {
             ))}
           </div>
 
-          {/* DEBT LIST */}
           {filteredDebts.length === 0 ? (
-            <p className="text-gray-400">
-              No debts found for this category.
-            </p>
+            <p className="text-gray-400">No debts found for this category.</p>
           ) : (
             <div className="flex flex-col gap-3">
               {filteredDebts.map((debt) => (
@@ -120,7 +85,7 @@ const AllDebtsPage = () => {
               ))}
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

@@ -23,7 +23,9 @@ router.post("/signup", async (req, res) => {
     });
 
     const payload = { username: user.username, _id: user._id };
-    const token = jwt.sign({ payload }, process.env.JWT_SECRET);
+    const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
 
     res.status(201).json({ token });
   } catch (err) {
@@ -35,7 +37,7 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
-      return res.status(401).json({ error: "User not found" });
+      return res.status(401).json({ err: "User not found" });
     }
 
     const isPasswordCorrect = bcrypt.compareSync(
@@ -48,7 +50,9 @@ router.post("/login", async (req, res) => {
 
     const payload = { username: user.username, _id: user._id };
 
-    const token = jwt.sign({ payload }, process.env.JWT_SECRET);
+    const token = jwt.sign({ payload }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
 
     res.status(200).json({ token });
   } catch (err) {
