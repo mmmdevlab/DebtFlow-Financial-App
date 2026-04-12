@@ -1,12 +1,50 @@
-const PaymentForm = ({ debt, onCancel }) => {
+import { User } from "lucide-react";
+import { useState } from "react";
+
+const PaymentForm = ({ debt, onCancel, onSuccess }) => {
+
+  const [formData, setFormData] = useState({
+  amount: "",
+  payment_date: "",
+  });
+
   const labelStyle =
     "text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1";
 
   const inputStyle =
     "w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition";
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({...prev,[name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await fetch(`${import.meta.env.VITE_BACK_END_SERVER_URL}/api/payments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          debt_id: debt._id,
+          amount: Number(formData.amount),
+          payment_date: formData.payment_date,
+        }),
+      });
+
+      onSuccess?.();
+
+    } catch (err) {
+      console.error(err);
+      alert("Error logging payment");
+    }
   };
 
   return (
@@ -31,6 +69,8 @@ const PaymentForm = ({ debt, onCancel }) => {
             type="number"
             name="amount"
             placeholder="0.00"
+            value={formData.amount}
+            onChange={handleChange}
             className={inputStyle}
             required
           />
@@ -41,6 +81,8 @@ const PaymentForm = ({ debt, onCancel }) => {
           <input
             type="date"
             name="payment_date"
+            value={formData.payment_date}
+            onChange={handleChange}
             className={inputStyle}
             required
           />

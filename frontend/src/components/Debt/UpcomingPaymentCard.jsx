@@ -112,7 +112,7 @@ const getUpcomingPayments = (debts) => {
 
 // ------------------ COMPONENT ------------------
 
-const UpcomingPaymentCard = ({ debts }) => {
+const UpcomingPaymentCard = ({ debts, onPay }) => {
   const upcomingPayments = getUpcomingPayments(debts);
 
   if (upcomingPayments.length === 0) {
@@ -155,6 +155,12 @@ const UpcomingPaymentCard = ({ debts }) => {
               {formatDate(payment.paymentDate)}
             </p>
           </div>
+
+          <button
+            onClick={() => onPay(payment)}
+            className="text-xs bg-green-500 text-white px-3 py-1 rounded-full">
+            Pay
+          </button>
         </div>
       ))}
     </div>

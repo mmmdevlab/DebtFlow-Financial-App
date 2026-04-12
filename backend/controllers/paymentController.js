@@ -28,15 +28,52 @@ const getPaymentById = async (req, res) => {
 };
 
 /* ------ POST -------*/
+// const createPayment = async (req, res) => {
+//   try {
+//     const { user_id, debt_id, amount, payment_date } = req.body;
+
+//     if (
+//       !mongoose.Types.ObjectId.isValid(user_id) ||
+//       !mongoose.Types.ObjectId.isValid(debt_id)
+//     ) {
+//       return res.status(400).json({ err: "Invalid user_id or debt_id" });
+//     }
+
+//     if (typeof amount !== "number" || amount <= 0) {
+//       return res.status(400).json({ err: "Amount must be a positive number" });
+//     }
+
+//     const debt = await Debt.findById(debt_id);
+//     if (!debt) return res.status(404).json({ err: "Debt not found" });
+
+//     if (String(debt.user_id) !== String(user_id)) {
+//       return res.status(400).json({ err: "Debt does not belong to this user" });
+//     }
+
+//     const payment = await Payment.create({
+//       user_id,
+//       debt_id,
+//       amount,
+//       payment_date,
+//     });
+
+//     debt.current_balance -= amount;
+//     debt.status = debt.current_balance <= 0 ? "paidOff" : "active";
+//     await debt.save();
+
+//     res.status(201).json(payment);
+//   } catch (err) {
+//     res.status(400).json({ err: err.message });
+//   }
+// };
+
 const createPayment = async (req, res) => {
   try {
-    const { user_id, debt_id, amount, payment_date } = req.body;
+    const { debt_id, amount, payment_date } = req.body;
+    const user_id = req.user._id;
 
-    if (
-      !mongoose.Types.ObjectId.isValid(user_id) ||
-      !mongoose.Types.ObjectId.isValid(debt_id)
-    ) {
-      return res.status(400).json({ err: "Invalid user_id or debt_id" });
+    if (!mongoose.Types.ObjectId.isValid(debt_id)) {
+      return res.status(400).json({ err: "Invalid debt_id" });
     }
 
     if (typeof amount !== "number" || amount <= 0) {
@@ -46,8 +83,9 @@ const createPayment = async (req, res) => {
     const debt = await Debt.findById(debt_id);
     if (!debt) return res.status(404).json({ err: "Debt not found" });
 
+    // 🔒 ensure user owns this debt
     if (String(debt.user_id) !== String(user_id)) {
-      return res.status(400).json({ err: "Debt does not belong to this user" });
+      return res.status(403).json({ err: "Unauthorized" });
     }
 
     const payment = await Payment.create({
@@ -57,6 +95,7 @@ const createPayment = async (req, res) => {
       payment_date,
     });
 
+    // ✅ update debt
     debt.current_balance -= amount;
     debt.status = debt.current_balance <= 0 ? "paidOff" : "active";
     await debt.save();

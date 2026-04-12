@@ -71,11 +71,11 @@ const AllDebtsPage = () => {
             ))}
           </div>
 
-          {filteredDebts.length === 0 ? (
+          {debts.length === 0 ? (
             <p className="text-gray-400">No debts found for this category.</p>
           ) : (
             <div className="flex flex-col gap-3">
-              {filteredDebts.map((debt) => (
+              {debts.map((debt) => (
                 <DebtCard
                   key={debt._id}
                   debt={debt}

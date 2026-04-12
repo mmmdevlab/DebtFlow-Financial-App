@@ -1,5 +1,7 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { DebtContext } from "../context/DebtContext";
+import UpcomingPaymentCard from "../components/Debt/UpcomingPaymentCard";
+import PaymentForm from "../components/Debt/PaymentForm";
 
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-SG", {
@@ -9,6 +11,8 @@ const formatCurrency = (amount) =>
 
 const DashboardPage = () => {
   const { debts, loading, error } = useContext(DebtContext);
+  const [selectedDebt, setSelectedDebt] = useState(null);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   const totalDebt = debts.reduce((sum, d) => sum + d.current_balance, 0);
   const activeCount = debts.filter((d) => d.status === "active").length;
@@ -55,7 +59,26 @@ const DashboardPage = () => {
         Upcoming debt payments
       </p>
 
-      <UpcomingPaymentCard debts={debts} />
+      <UpcomingPaymentCard 
+        debts={debts} 
+        onPay={(debt)=>{
+          setSelectedDebt(debt)
+          setShowPaymentForm(true)
+        }
+
+        }/>
+
+      {showPaymentForm && (
+        <PaymentForm
+          debt={selectedDebt}
+          onCancel={() => setShowPaymentForm(false)}
+          onSuccess={async () => {
+            setShowPaymentForm(false);
+            const data = await getAllDebts();
+            setDebts(data);
+          }}
+        />
+      )}
 
       {/* CTA */}
       <button className="bg-green-500 text-white rounded-full px-6 py-3 font-bold uppercase tracking-widest text-sm hover:bg-green-600 transition">

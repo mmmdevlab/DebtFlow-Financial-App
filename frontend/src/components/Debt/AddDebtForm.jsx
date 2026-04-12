@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FormView from "./FormView";
 import SuccessView from "./SuccessView";
 import { createDebt, updateDebt } from "../../services/debtService";
@@ -21,6 +21,15 @@ const AddDebtForm = ({ selectedData, isEditing, onSubmit }) => {
   );
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
+
+  
+  useEffect(() => {
+    if (isEditing && selectedData) {
+      setFormData(selectedData);
+    } else {
+      setFormData(initialState);
+    }}, [selectedData, isEditing]
+  )
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
