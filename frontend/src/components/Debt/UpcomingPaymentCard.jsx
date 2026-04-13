@@ -1,13 +1,15 @@
 import React from "react";
 
+// ------------------ FORMATTERS ------------------
+
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-SG", {
     style: "currency",
     currency: "SGD",
   }).format(amount);
 
-const formatDate = (dateStr) =>
-  new Date(dateStr).toLocaleDateString("en-SG", {
+const formatDate = (date) =>
+  new Date(date).toLocaleDateString("en-SG", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -49,25 +51,59 @@ const calculateMonthlyPayment = (debt) => {
 const calculateAnnualPayment = (debt) => {
   const P = Number(debt.current_balance);
   const r = debt.interest_rate / 100;
-
   return P * (1 + r);
+};
+
+// ------------------ PAYMENT CHECK ------------------
+
+const hasPaidThisPeriod = (debt, payments) => {
+  const today = new Date();
+
+  return payments.some((p) => {
+    if (p.debt_id !== debt._id) return false;
+
+    const paymentDate = new Date(p.payment_date);
+
+    if (debt.frequency === "monthly") {
+      return (
+        paymentDate.getMonth() === today.getMonth() &&
+        paymentDate.getFullYear() === today.getFullYear()
+      );
+    }
+
+    if (debt.frequency === "annually") {
+      return paymentDate.getFullYear() === today.getFullYear();
+    }
+
+    if (debt.frequency === "one-time payment") {
+      return true; // already paid
+    }
+
+    return false;
+  });
 };
 
 // ------------------ MAIN LOGIC ------------------
 
-const getUpcomingPayments = (debts) => {
+const getUpcomingPayments = (debts, payments) => {
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   const next30Days = new Date();
   next30Days.setDate(today.getDate() + 30);
+  next30Days.setHours(0, 0, 0, 0);
 
   return debts
     .map((debt) => {
       let paymentDate = null;
       let amount = 0;
 
-      // ONE-OFF
+      const paid = hasPaidThisPeriod(debt, payments);
+
+      // ONE-TIME
       if (debt.frequency === "one-time payment") {
         const due = new Date(debt.due_date);
+        due.setHours(0, 0, 0, 0);
 
         if (due >= today && due <= next30Days) {
           paymentDate = due;
@@ -79,6 +115,7 @@ const getUpcomingPayments = (debts) => {
       else if (debt.frequency === "monthly") {
         const next = new Date();
         next.setMonth(next.getMonth() + 1);
+        next.setHours(0, 0, 0, 0);
 
         if (next >= today && next <= next30Days) {
           paymentDate = next;
@@ -90,10 +127,11 @@ const getUpcomingPayments = (debts) => {
       else if (debt.frequency === "annually") {
         const next = new Date(debt.start_date);
 
-        // move to next year cycle
         while (next < today) {
           next.setFullYear(next.getFullYear() + 1);
         }
+
+        next.setHours(0, 0, 0, 0);
 
         if (next >= today && next <= next30Days) {
           paymentDate = next;
@@ -101,19 +139,28 @@ const getUpcomingPayments = (debts) => {
         }
       }
 
-      if (paymentDate) {
-        return { ...debt, paymentDate, amount };
+      amount = Math.min(amount, Number(debt.current_balance || 0));
+
+      if (paymentDate && !paid && debt.current_balance > 0) {
+        return {
+          ...debt,
+          paymentDate,
+          amount,
+        };
       }
 
       return null;
     })
-    .filter(Boolean);
+    .filter(Boolean)
+    .sort(
+      (a, b) => new Date(a.paymentDate) - new Date(b.paymentDate)
+    );
 };
 
 // ------------------ COMPONENT ------------------
 
-const UpcomingPaymentCard = ({ debts, onPay }) => {
-  const upcomingPayments = getUpcomingPayments(debts);
+const UpcomingPaymentCard = ({ debts, payments = [], onPay }) => {
+  const upcomingPayments = getUpcomingPayments(debts, payments);
 
   if (upcomingPayments.length === 0) {
     return <p className="text-gray-400">No upcoming payments 🎉</p>;
@@ -137,9 +184,14 @@ const UpcomingPaymentCard = ({ debts, onPay }) => {
           </div>
 
           {/* AMOUNT */}
-          <span className="text-lg font-semibold text-gray-900 min-w-[100px]">
-            {formatCurrency(payment.amount)}
-          </span>
+          <div className="min-w-[110px]">
+            <p className="text-lg font-semibold text-gray-900">
+              {formatCurrency(payment.amount)}
+            </p>
+            <p className="text-xs text-gray-400">
+              Remaining: {formatCurrency(payment.current_balance)}
+            </p>
+          </div>
 
           {/* BADGE */}
           <span className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full bg-orange-500 text-white">
@@ -156,9 +208,11 @@ const UpcomingPaymentCard = ({ debts, onPay }) => {
             </p>
           </div>
 
+          {/* PAY BUTTON */}
           <button
-            onClick={() => onPay(payment)}
-            className="text-xs bg-green-500 text-white px-3 py-1 rounded-full">
+            onClick={() => onPay?.(payment)}
+            className="px-3 py-1 bg-green-500 text-white text-xs rounded-full hover:bg-green-600"
+          >
             Pay
           </button>
         </div>

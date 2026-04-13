@@ -74,6 +74,7 @@ const DashboardPage = () => {
 
       <UpcomingPaymentCard
         debts={debts}
+        payments = {payments}
         onPay={(debt) => {
           setSelectedDebt(debt);
           setShowPaymentForm(true);
