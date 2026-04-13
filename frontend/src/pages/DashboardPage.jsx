@@ -4,6 +4,7 @@ import { DebtContext } from "../context/DebtContext";
 import { usePayments } from "../context/PaymentContext";
 import UpcomingPaymentCard from "../components/Debt/UpcomingPaymentCard";
 import PaymentForm from "../components/Debt/PaymentForm";
+import OverduePaymentCard from "../components/Debt/OverduePaymentCard";
 
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-SG", {
@@ -70,6 +71,16 @@ const DashboardPage = () => {
         </div>
       </div>
       <p> Overdue </p>
+
+      <OverduePaymentCard 
+        debts={debts}
+        payments={payments}
+        onPay={(debt) => {
+          setSelectedDebt(debt);
+          setShowPaymentForm(true);
+        }}
+      />
+    
       <p className="text-gray-500 font-medium mt-2">Upcoming debt payments</p>
 
       <UpcomingPaymentCard
