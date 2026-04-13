@@ -52,7 +52,6 @@ const AccountPage = () => {
   const accountRows = [
     { label: "Username", value: profile.username },
     { label: "Email", value: profile.email },
-    { label: "Password", value: "••••••••", muted: true },
   ];
 
   return (

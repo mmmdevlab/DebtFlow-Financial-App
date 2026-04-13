@@ -1,4 +1,13 @@
+import { useEffect } from "react";
+
 const SuccessView = ({ submittedData, handleReset }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleReset();
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [handleReset]);
+
   const rows = [
     { label: "Category", value: submittedData.category },
     { label: "Label", value: submittedData.label },
@@ -27,6 +36,9 @@ const SuccessView = ({ submittedData, handleReset }) => {
         </div>
         <p className="text-green-700 font-medium text-base">
           Debt successfully added
+        </p>
+        <p className="text-xs text-green-500 mt-1">
+          Returning to form in a moment…
         </p>
       </div>
 

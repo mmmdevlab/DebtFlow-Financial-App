@@ -1,11 +1,12 @@
-import { User } from "lucide-react";
 import { useState } from "react";
+import { usePayments } from "../../context/PaymentContext";
 
-const PaymentForm = ({ debt, onCancel, onSuccess }) => {
+const PaymentForm = ({ debt, onClose, onSuccess }) => {
+  const { addPayment } = usePayments();
 
   const [formData, setFormData] = useState({
-  amount: "",
-  payment_date: "",
+    amount: "",
+    payment_date: "",
   });
 
   const labelStyle =
@@ -16,35 +17,18 @@ const PaymentForm = ({ debt, onCancel, onSuccess }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({...prev,[name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const token = localStorage.getItem("token");
-
-      await fetch(`${import.meta.env.VITE_BACK_END_SERVER_URL}/api/payments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          debt_id: debt._id,
-          amount: Number(formData.amount),
-          payment_date: formData.payment_date,
-        }),
-      });
-
-      onSuccess?.();
-
-    } catch (err) {
-      console.error(err);
-      alert("Error logging payment");
-    }
+    await addPayment({
+      debtId: debt._id,
+      amount: formData.amount,
+      payment_date: formData.payment_date,
+    });
+    onSuccess?.();
+    onClose?.();
   };
 
   return (
@@ -92,7 +76,7 @@ const PaymentForm = ({ debt, onCancel, onSuccess }) => {
       <div className="flex gap-3 mt-4">
         <button
           type="button"
-          onClick={onCancel}
+          onClick={onClose}
           className="flex-1 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-400 hover:bg-gray-50 transition"
         >
           Cancel
