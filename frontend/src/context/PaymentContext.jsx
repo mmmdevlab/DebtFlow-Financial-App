@@ -61,6 +61,27 @@ export const PaymentProvider = ({ children }) => {
       setError("Error logging payment.");
     }
   };
+  const updatePayment = async (paymentId, { amount, payment_date }) => {
+    setError(null);
+    try {
+      const token = localStorage.getItem("token");
+      await fetch(
+        `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/payments/${paymentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ amount: Number(amount), payment_date }),
+        },
+      );
+      await fetchPayments();
+    } catch (err) {
+      console.error(err);
+      setError("Error updating payment.");
+    }
+  };
 
   const deletePayment = async (paymentId) => {
     try {
@@ -86,6 +107,7 @@ export const PaymentProvider = ({ children }) => {
         loading,
         error,
         addPayment,
+        updatePayment,
         deletePayment,
         refetchPayments: fetchPayments,
       }}

@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { usePayments } from "../../context/PaymentContext";
 
-const PaymentForm = ({ debt, onClose, onSuccess }) => {
-  const { addPayment } = usePayments();
+const labelStyle =
+  "text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1";
+const inputStyle =
+  "w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition";
+
+const PaymentForm = ({ debt, onClose, onSuccess, editingPayment }) => {
+  const { addPayment, updatePayment } = usePayments();
+  const isEditing = !!editingPayment;
 
   const [formData, setFormData] = useState({
-    amount: "",
-    payment_date: "",
+    amount: editingPayment?.amount ?? "",
+    payment_date: editingPayment?.payment_date
+      ? editingPayment.payment_date.slice(0, 10)
+      : "",
   });
-
-  const labelStyle =
-    "text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1";
-
-  const inputStyle =
-    "w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,11 +24,15 @@ const PaymentForm = ({ debt, onClose, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addPayment({
-      debtId: debt._id,
-      amount: formData.amount,
-      payment_date: formData.payment_date,
-    });
+    if (isEditing) {
+      await updatePayment(editingPayment._id, formData);
+    } else {
+      await addPayment({
+        debtId: debt._id,
+        amount: formData.amount,
+        payment_date: formData.payment_date,
+      });
+    }
     onSuccess?.();
     onClose?.();
   };
@@ -34,19 +40,9 @@ const PaymentForm = ({ debt, onClose, onSuccess }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-5 w-full sm:max-w-xl mx-auto border border-gray-200 rounded-xl p-6 bg-white shadow-md"
+      className="flex flex-col gap-4 mt-3 pt-4 border-t border-gray-100"
     >
-      <div>
-        <h1 className="text-2xl font-extrabold text-gray-900">Log Payment</h1>
-        {debt && (
-          <p className="text-sm text-gray-400 mt-1">
-            Recording payment for{" "}
-            <span className="text-gray-600 font-medium">{debt.label}</span>
-          </p>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col">
           <span className={labelStyle}>Amount *</span>
           <input
@@ -60,8 +56,8 @@ const PaymentForm = ({ debt, onClose, onSuccess }) => {
           />
         </label>
 
-        <label className="flex flex-col min-w-0">
-          <span className={labelStyle}>Date of Payment *</span>
+        <label className="flex flex-col">
+          <span className={labelStyle}>Date *</span>
           <input
             type="date"
             name="payment_date"
@@ -73,19 +69,19 @@ const PaymentForm = ({ debt, onClose, onSuccess }) => {
         </label>
       </div>
 
-      <div className="flex gap-3 mt-4">
+      <div className="flex gap-3">
+        <button
+          type="submit"
+          className="flex-1 py-2.5 bg-green-500 text-white rounded-full text-sm font-bold hover:bg-green-600 transition"
+        >
+          {isEditing ? "Update" : "Log Payment"}
+        </button>
         <button
           type="button"
           onClick={onClose}
-          className="flex-1 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-400 hover:bg-gray-50 transition"
+          className="flex-1 py-2.5 rounded-full border border-gray-200 text-sm font-bold text-gray-400 hover:bg-gray-50 transition"
         >
           Cancel
-        </button>
-        <button
-          type="submit"
-          className="flex-1 py-3 bg-green-500 text-white rounded-full text-sm font-bold hover:bg-green-600 transition shadow-lg shadow-green-100"
-        >
-          Log Payment
         </button>
       </div>
     </form>
