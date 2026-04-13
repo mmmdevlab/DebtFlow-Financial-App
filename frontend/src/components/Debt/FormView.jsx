@@ -1,4 +1,10 @@
-const FormView = ({ formData, handleChange, handleSubmit }) => {
+const FormView = ({
+  formData,
+  handleChange,
+  handleSubmit,
+  isEditing,
+  onCancel,
+}) => {
   const labelStyle =
     "text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1";
 
@@ -133,12 +139,30 @@ const FormView = ({ formData, handleChange, handleSubmit }) => {
         </label>
       </div>
 
-      <button
-        type="submit"
-        className="w-full py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition mt-4 shadow-lg shadow-green-100"
-      >
-        Add Debt Record
-      </button>
+      {isEditing ? (
+        <div className="flex gap-3 mt-4">
+          <button
+            type="submit"
+            className="flex-1 py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition shadow-lg shadow-green-100"
+          >
+            Update Debt
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="flex-1 py-3 rounded-full border border-gray-200 text-sm font-bold text-gray-400 hover:bg-gray-50 transition"
+          >
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <button
+          type="submit"
+          className="w-full py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition mt-4 shadow-lg shadow-green-100"
+        >
+          Add Debt Record
+        </button>
+      )}
     </form>
   );
 };

@@ -15,7 +15,7 @@ const initialState = {
   status: "active",
 };
 
-const AddDebtForm = ({ selectedData, isEditing, onSubmit }) => {
+const AddDebtForm = ({ selectedData, isEditing, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState(
     isEditing && selectedData ? selectedData : initialState,
   );
@@ -25,11 +25,7 @@ const AddDebtForm = ({ selectedData, isEditing, onSubmit }) => {
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     const finalValue = type === "number" ? parseFloat(value) || 0 : value;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: finalValue,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: finalValue }));
   };
 
   const handleSubmit = async (e) => {
@@ -59,6 +55,8 @@ const AddDebtForm = ({ selectedData, isEditing, onSubmit }) => {
       formData={formData}
       handleChange={handleChange}
       handleSubmit={handleSubmit}
+      isEditing={isEditing}
+      onCancel={onCancel}
     />
   );
 };

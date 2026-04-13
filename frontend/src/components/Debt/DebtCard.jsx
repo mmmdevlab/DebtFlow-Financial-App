@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Pencil, Trash2, CreditCard } from "lucide-react";
 import ActionButton from "../UI/ActionButton";
+import AddDebtForm from "./AddDebtForm";
 
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-SG", { style: "currency", currency: "SGD" }).format(
@@ -39,27 +41,25 @@ const statusConfig = {
 
 const DebtCard = ({
   debt,
-  handleEdit,
   handleDelete,
   onLogPayment,
   view = "allDebts",
+  onUpdated,
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+
   const status = getStatus(debt);
   const { label, badge, dateClass } = statusConfig[status];
 
-  // const handleCardClick = () => {
-  //   if (view === "dashboard") {
-  //     onLogPayment?.(debt);
-  //   } else {
-  //     handleEdit?.(debt);
-  //   }
-  // };
-
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl px-4 py-3 cursor-pointer hover:border-gray-300 transition-colors shadow-sm">
+    <div
+      className={`bg-white border rounded-2xl px-4 py-3 transition-colors shadow-sm ${
+        isEditing ? "border-green-300" : "border-gray-100 hover:border-gray-300"
+      }`}
+    >
       <div
-        // onClick={handleCardClick}
-        className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-0"
+        className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-0 cursor-pointer"
+        onClick={() => view === "allDebts" && setIsEditing((prev) => !prev)}
       >
         <div className="sm:w-[160px] sm:shrink-0">
           <p className="text-sm font-bold text-gray-900 truncate">
@@ -82,7 +82,6 @@ const DebtCard = ({
           </span>
         </div>
 
-        {/* Due date */}
         <div className="sm:flex-1">
           <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold">
             Due
@@ -92,24 +91,18 @@ const DebtCard = ({
           </p>
         </div>
 
-        {/* Actions */}
-        <div className="flex gap-2 sm:shrink-0">
+        <div
+          className="flex gap-2 sm:shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
           {view === "allDebts" ? (
             <>
-              <ActionButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEdit(debt);
-                }}
-              >
+              <ActionButton onClick={() => setIsEditing((prev) => !prev)}>
                 <Pencil size={14} />
               </ActionButton>
               <ActionButton
                 variant="danger"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(debt._id);
-                }}
+                onClick={() => handleDelete(debt._id)}
               >
                 <Trash2 size={14} />
               </ActionButton>
@@ -125,6 +118,20 @@ const DebtCard = ({
           )}
         </div>
       </div>
+
+      {isEditing && (
+        <div className="mt-3 pt-4 border-t border-gray-100">
+          <AddDebtForm
+            selectedData={debt}
+            isEditing={true}
+            onSubmit={() => {
+              setIsEditing(false);
+              onUpdated?.();
+            }}
+            onCancel={() => setIsEditing(false)}
+          />
+        </div>
+      )}
     </div>
   );
 };
