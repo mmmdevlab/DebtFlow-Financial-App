@@ -4,7 +4,7 @@ import { DebtContext } from "../context/DebtContext";
 import { usePayments } from "../context/PaymentContext";
 import UpcomingCard from "../components/Dashboard/UpcomingCard";
 import PaymentForm from "../components/Payment/PaymentForm";
-import OverdueCard from "../components/Dashboard/OverdueCard";
+import { getAllPayments } from "../components/Dashboard/UpcomingCard";
 
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-SG", {
@@ -16,9 +16,7 @@ const DashboardPage = () => {
   const { debts, loading, error } = useContext(DebtContext);
   const { payments, refetchPayments } = usePayments();
   const navigate = useNavigate();
-
-  const [selectedDebt, setSelectedDebt] = useState(null);
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const allPayments = getAllPayments(debts, payments);
 
   const totalPayments = payments.reduce(
     (sum, payment) => sum + Number(payment.amount),
@@ -26,9 +24,7 @@ const DashboardPage = () => {
   );
   const totalDebt = debts.reduce((sum, d) => sum + d.current_balance, 0);
   const activeCount = debts.filter((d) => d.status === "active").length;
-  const overdueCount = debts.filter(
-    (d) => new Date(d.due_date) < new Date() && d.status !== "paidOff",
-  ).length;
+  const overdueCount = allPayments.filter((p) => p.isOverdue).length;
 
   if (loading) return <p className="p-6 text-gray-400">Loading...</p>;
   if (error) return <p className="p-6 text-red-500">{error}</p>;
@@ -78,17 +74,7 @@ const DashboardPage = () => {
           </div>
         </div>
       </section>
-      <section className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">Overdue</h1>
-        <OverdueCard
-          debts={debts}
-          payments={payments}
-          onPay={(debt) => {
-            setSelectedDebt(debt);
-            setShowPaymentForm(true);
-          }}
-        />
-      </section>
+
       <section className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold text-gray-900">
           Upcoming debt payments
@@ -97,22 +83,8 @@ const DashboardPage = () => {
         <UpcomingCard
           debts={debts}
           payments={payments}
-          onPay={(debt) => {
-            setSelectedDebt(debt);
-            setShowPaymentForm(true);
-          }}
+          onSuccess={refetchPayments}
         />
-
-        {showPaymentForm && selectedDebt && (
-          <PaymentForm
-            debt={selectedDebt}
-            onClose={() => {
-              setShowPaymentForm(false);
-              setSelectedDebt(null);
-            }}
-            onSuccess={refetchPayments}
-          />
-        )}
       </section>
 
       <button
