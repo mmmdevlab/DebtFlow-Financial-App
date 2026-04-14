@@ -13,7 +13,7 @@ const ActionButton = ({
   const variants = {
     primary: "bg-gray-900 text-white hover:bg-gray-700",
     danger: "bg-red-500 text-white hover:bg-red-700",
-    secondary: "bg-blue-600 text-white hover:bg-blue-700",
+    secondary: "bg-green-600 text-white hover:bg-green-700",
     outline: "border border-gray-200 text-gray-600 hover:bg-gray-50",
   };
 

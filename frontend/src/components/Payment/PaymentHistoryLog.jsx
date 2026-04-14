@@ -4,10 +4,10 @@ import { DebtContext } from "../../context/DebtContext";
 import PaymentCard from "./PaymentCard";
 
 const PaymentHistoryLog = () => {
-  const { payments, loading, error } = usePayments();
-  const { debts } = useContext(DebtContext);
+  const { payments, loading: paymentsLoading, error } = usePayments();
+  const { debts, loading: debtsLoading } = useContext(DebtContext);
 
-  if (loading)
+  if (paymentsLoading || debtsLoading)
     return <p className="text-gray-400 text-sm">Loading payments...</p>;
   if (error) return <p className="text-red-400 text-sm">{error}</p>;
 
@@ -21,9 +21,19 @@ const PaymentHistoryLog = () => {
         payments.map((payment) => {
           const debtId =
             typeof payment.debt_id === "object"
-              ? payment.debt_id?._id
+              ? payment.debt_id?._id?.toString()
               : payment.debt_id;
-          const debt = debts.find((d) => d._id === debtId);
+          const debt = debts.find(
+            (d) => d._id?.toString() === debtId?.toString(),
+          );
+          console.log("payment.debt_id:", payment.debt_id);
+          console.log("resolved debtId:", debtId);
+          console.log(
+            "debts available:",
+            debts.map((d) => d._id?.toString()),
+          );
+          console.log("matched debt:", debt);
+
           return (
             <PaymentCard key={payment._id} payment={payment} debt={debt} />
           );

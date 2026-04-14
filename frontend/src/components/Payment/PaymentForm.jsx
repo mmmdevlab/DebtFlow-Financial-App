@@ -24,15 +24,21 @@ const PaymentForm = ({ debt, onClose, onSuccess, editingPayment }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (isEditing) {
       await updatePayment(editingPayment._id, formData);
     } else {
+      if (!debt?._id) {
+        console.error("PaymentForm: debt prop is missing or has no _id", debt);
+        return;
+      }
       await addPayment({
         debtId: debt._id,
         amount: formData.amount,
         payment_date: formData.payment_date,
       });
     }
+
     onSuccess?.();
     onClose?.();
   };

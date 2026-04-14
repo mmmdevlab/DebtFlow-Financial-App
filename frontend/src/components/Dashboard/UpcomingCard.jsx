@@ -1,4 +1,7 @@
-import React from "react";
+import { useState } from "react";
+import { CreditCard } from "lucide-react";
+import ActionButton from "../UI/ActionButton";
+import PaymentForm from "../Payment/PaymentForm";
 
 // ------------------ FORMATTERS ------------------
 
@@ -156,64 +159,96 @@ const getUpcomingPayments = (debts, payments) => {
 
 // ------------------ COMPONENT ------------------
 
-const UpcomingPaymentCard = ({ debts, payments = [], onPay }) => {
+const UpcomingCard = ({ debts, payments = [], onSuccess }) => {
   const upcomingPayments = getUpcomingPayments(debts, payments);
+  const [openId, setOpenId] = useState(null);
 
-  if (upcomingPayments.length === 0) {
+  if (upcomingPayments.length === 0)
     return <p className="text-gray-400">No upcoming payments 🎉</p>;
-  }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2">
       {upcomingPayments.map((payment) => (
-        <div
-          key={payment._id}
-          className="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl px-4 py-3 shadow-sm"
-        >
-          {/* NAME */}
-          <div className="sm:w-[160px] sm:shrink-0">
-            <p className="text-sm font-bold text-gray-900 truncate">
-              {payment.label}
-            </p>
-            <p className="text-xs text-gray-400 capitalize">
-              {payment.category}
-            </p>
-          </div>
-
-          {/* AMOUNT */}
-          <div className="sm:w-[130px] sm:shrink-0">
-            <p className="text-lg font-semibold text-gray-900">
-              {formatCurrency(payment.amount)}
-            </p>
-            <p className="text-xs text-gray-400">
-              Remaining: {formatCurrency(payment.current_balance)}
-            </p>
-          </div>
-
-          {/* BADGE */}
-          <span className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full bg-orange-500 text-white">
-            Due Soon
-          </span>
-
-          {/* DATE */}
-          <div className="flex-1 text-right">
-            <p className="text-[10px] text-gray-400 uppercase font-bold">Due</p>
-            <p className="text-sm font-medium text-gray-900">
-              {formatDate(payment.paymentDate)}
-            </p>
-          </div>
-
-          {/* PAY BUTTON */}
-          <button
-            onClick={() => onPay?.(payment)}
-            className="px-3 py-1 bg-green-500 text-white text-xs rounded-full hover:bg-green-600"
+        <div key={payment._id}>
+          <div
+            className={`bg-white border rounded-2xl px-4 py-3 transition-colors shadow-sm cursor-pointer ${
+              openId === payment._id
+                ? "border-green-300"
+                : "border-gray-100 hover:border-gray-300"
+            }`}
+            onClick={() =>
+              setOpenId(openId === payment._id ? null : payment._id)
+            }
           >
-            Pay
-          </button>
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center cursor-pointer">
+              {/* NAME */}
+              <div className="sm:w-[160px] sm:shrink-0">
+                <p className="text-sm font-bold text-gray-900 truncate">
+                  {payment.label}
+                </p>
+                <p className="text-xs text-gray-400 capitalize">
+                  {payment.category}
+                </p>
+              </div>
+
+              {/* AMOUNT */}
+              <div className="sm:w-[130px] sm:shrink-0">
+                <p className="text-lg font-semibold text-gray-900">
+                  {formatCurrency(payment.amount)}
+                </p>
+                <p className="text-xs text-gray-400">
+                  Remaining: {formatCurrency(payment.current_balance)}
+                </p>
+              </div>
+
+              {/* BADGE */}
+              <div className="sm:w-[90px] sm:shrink-0">
+                <span className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full bg-orange-500 text-white">
+                  Due Soon
+                </span>
+              </div>
+
+              {/* DATE */}
+              <div className="sm:flex-1">
+                <p className="text-[10px] text-gray-400 uppercase font-bold">
+                  Due
+                </p>
+                <p className="text-sm font-bold text-gray-900">
+                  {formatDate(payment.paymentDate)}
+                </p>
+              </div>
+
+              {/* ACTION BUTTON — stops click bubbling to card toggle */}
+              <div
+                className="flex gap-2 sm:shrink-0"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ActionButton
+                  variant="secondary"
+                  onClick={() =>
+                    setOpenId(openId === payment._id ? null : payment._id)
+                  }
+                >
+                  <CreditCard size={14} />
+                  {/* {openId === payment._id ? "Close" : "Pay"} */}
+                </ActionButton>
+              </div>
+            </div>
+          </div>
+
+          {openId === payment._id && (
+            <div className="mb-2">
+              <PaymentForm
+                payment={payment}
+                onClose={() => setOpenId(null)}
+                onSuccess={onSuccess}
+              />
+            </div>
+          )}
         </div>
       ))}
     </div>
   );
 };
 
-export default UpcomingPaymentCard;
+export default UpcomingCard;

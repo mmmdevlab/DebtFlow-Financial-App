@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Pencil, Trash2, CreditCard } from "lucide-react";
 import ActionButton from "../UI/ActionButton";
 import AddDebtForm from "./AddDebtForm";
+import PaymentForm from "../Payment/PaymentForm";
 
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-SG", { style: "currency", currency: "SGD" }).format(
@@ -47,6 +48,7 @@ const DebtCard = ({
   onUpdated,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
 
   const status = getStatus(debt);
   const { label, badge, dateClass } = statusConfig[status];
@@ -58,7 +60,7 @@ const DebtCard = ({
       }`}
     >
       <div
-        className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-0 cursor-pointer"
+        className="flex flex-col gap-5 sm:flex-row sm:items-center cursor-pointer"
         onClick={() => view === "allDebts" && setIsEditing((prev) => !prev)}
       >
         <div className="sm:w-[160px] sm:shrink-0">
@@ -97,9 +99,19 @@ const DebtCard = ({
         >
           {view === "allDebts" ? (
             <>
+              <ActionButton
+                variant="secondary"
+                onClick={() => {
+                  setIsPaying((prev) => !prev);
+                  setIsEditing(false);
+                }}
+              >
+                <CreditCard size={14} />
+              </ActionButton>
               <ActionButton onClick={() => setIsEditing((prev) => !prev)}>
                 <Pencil size={14} />
               </ActionButton>
+
               <ActionButton
                 variant="danger"
                 onClick={() => handleDelete(debt._id)}
@@ -129,6 +141,18 @@ const DebtCard = ({
               onUpdated?.();
             }}
             onCancel={() => setIsEditing(false)}
+          />
+        </div>
+      )}
+      {isPaying && !isEditing && (
+        <div className="mt-3 pt-4 border-t border-gray-100">
+          <PaymentForm
+            debt={debt}
+            onClose={() => setIsPaying(false)}
+            onSuccess={() => {
+              setIsPaying(false);
+              onUpdated?.();
+            }}
           />
         </div>
       )}

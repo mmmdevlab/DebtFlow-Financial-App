@@ -2,8 +2,8 @@ import AddDebtForm from "../components/Debt/AddDebtForm";
 
 const LogPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50 p-5">
-      <div className="min-w-lg flex justify-center gap-5">
+    <div className="flex flex-col max-w-3xl mx-auto p-2">
+      <div className="flex justify-center">
         <AddDebtForm />
       </div>
     </div>

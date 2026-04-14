@@ -18,17 +18,17 @@ const formatCurrency = (amount) =>
   }).format(amount);
 
 const PaymentCard = ({ payment, debt }) => {
-  const { deletePayment, refetchPayments } = usePayments();
+  const { deletePayment } = usePayments();
   const [isEditing, setIsEditing] = useState(false);
 
   return (
     <div
-      className={`bg-white border rounded-2xl px-4 py-3 transition-colors shadow-sm ${
+      className={`bg-white border rounded-2xl px-4 py-3 transition-colors shadow-sm cursor-pointer ${
         isEditing ? "border-green-300" : "border-gray-100 hover:border-gray-300"
       }`}
     >
       <div
-        className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-0 cursor-pointer"
+        className="flex flex-col gap-5 sm:flex-row sm:items-center cursor-pointer"
         onClick={() => setIsEditing((prev) => !prev)}
       >
         <div className="sm:w-[160px] sm:shrink-0">
@@ -76,7 +76,7 @@ const PaymentCard = ({ payment, debt }) => {
           debt={debt}
           editingPayment={payment}
           onClose={() => setIsEditing(false)}
-          onSuccess={refetchPayments}
+          onSuccess={() => setIsEditing(false)}
         />
       )}
     </div>
