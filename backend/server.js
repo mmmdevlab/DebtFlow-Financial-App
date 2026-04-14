@@ -5,7 +5,7 @@ dotenv.config();
 const cors = require("cors");
 
 const authRouter = require("./controllers/authController.js");
-const testJwtRouter = require("./controllers/test-jwt.js");
+// const testJwtRouter = require("./controllers/test-jwt.js");
 const verifyToken = require("./middleware/verify-token.js");
 
 const usersController = require("./controllers/userController.js");
@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/auth", authRouter);
-app.use("/test-jwt", testJwtRouter);
+// app.use("/test-jwt", testJwtRouter);
 
 app.get("/api/users/profile", verifyToken, usersController.getUserProfile);
 app.get("/api/users", verifyToken, usersController.getAllUsers);

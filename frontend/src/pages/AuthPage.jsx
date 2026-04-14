@@ -22,7 +22,7 @@ const benefits = [
 const AuthPage = () => {
   return (
     <div
-      className="min-h-screen flex flex-col md:flex-row items-start justify-center gap-10 pt-14"
+      className="min-h-screen flex flex-col md:flex-row items-center justify-center gap-10 px-4 pt-14"
       style={{
         backgroundImage: "url('/background1.jpg')",
         backgroundSize: "cover",

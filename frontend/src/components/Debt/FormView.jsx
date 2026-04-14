@@ -14,7 +14,7 @@ const FormView = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-5 max-w-xl min-w-auto border border-gray-200 rounded-xl p-6 bg-white shadow-md"
+      className="flex flex-col gap-5 max-w-2xl min-w-auto border border-gray-200 rounded-xl p-6 bg-white shadow-md"
     >
       <div>
         <h1 className="text-2xl font-extrabold text-gray-900">Add New Debt</h1>

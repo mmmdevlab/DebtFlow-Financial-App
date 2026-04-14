@@ -34,7 +34,7 @@ const DashboardPage = () => {
   if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
-    <div className="flex flex-col gap-5 max-w-xl mx-auto p-6">
+    <div className="flex flex-col gap-5 max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold text-gray-900">Your Dashboard</h1>
 
       <div className="border border-gray-100 rounded-xl p-5 bg-white">
@@ -72,7 +72,7 @@ const DashboardPage = () => {
       </div>
       <p> Overdue </p>
 
-      <OverduePaymentCard 
+      <OverduePaymentCard
         debts={debts}
         payments={payments}
         onPay={(debt) => {
@@ -80,12 +80,12 @@ const DashboardPage = () => {
           setShowPaymentForm(true);
         }}
       />
-    
+
       <p className="text-gray-500 font-medium mt-2">Upcoming debt payments</p>
 
       <UpcomingPaymentCard
         debts={debts}
-        payments = {payments}
+        payments={payments}
         onPay={(debt) => {
           setSelectedDebt(debt);
           setShowPaymentForm(true);

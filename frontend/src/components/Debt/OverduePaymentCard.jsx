@@ -65,11 +65,7 @@ const getOverduePayments = (debts, payments) => {
       // 🔥 KEY CHECK
       const paidAfter = hasPaymentAfterDate(debt, payments, lastDueDate);
 
-      if (
-        lastDueDate < today &&
-        !paidAfter &&
-        debt.current_balance > 0
-      ) {
+      if (lastDueDate < today && !paidAfter && debt.current_balance > 0) {
         return {
           ...debt,
           paymentDate: lastDueDate,
@@ -99,8 +95,8 @@ const OverduePaymentCard = ({ debts, payments = [], onPay }) => {
           className="flex items-center gap-4 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 shadow-sm"
         >
           {/* NAME */}
-          <div className="min-w-[110px]">
-            <p className="text-sm font-bold text-gray-900">
+          <div className="sm:w-[160px] sm:shrink-0">
+            <p className="text-sm font-bold text-gray-900 truncate">
               {payment.label}
             </p>
             <p className="text-xs text-gray-400 capitalize">
@@ -109,7 +105,7 @@ const OverduePaymentCard = ({ debts, payments = [], onPay }) => {
           </div>
 
           {/* AMOUNT */}
-          <div className="min-w-[110px]">
+          <div className="sm:w-[130px] sm:shrink-0">
             <p className="text-lg font-semibold text-red-600">
               {formatCurrency(payment.amount)}
             </p>

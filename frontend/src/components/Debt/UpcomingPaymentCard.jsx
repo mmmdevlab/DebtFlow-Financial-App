@@ -43,8 +43,7 @@ const calculateMonthlyPayment = (debt) => {
   if (!r) return P / totalMonths;
 
   return (
-    (P * r * Math.pow(1 + r, totalMonths)) /
-    (Math.pow(1 + r, totalMonths) - 1)
+    (P * r * Math.pow(1 + r, totalMonths)) / (Math.pow(1 + r, totalMonths) - 1)
   );
 };
 
@@ -152,9 +151,7 @@ const getUpcomingPayments = (debts, payments) => {
       return null;
     })
     .filter(Boolean)
-    .sort(
-      (a, b) => new Date(a.paymentDate) - new Date(b.paymentDate)
-    );
+    .sort((a, b) => new Date(a.paymentDate) - new Date(b.paymentDate));
 };
 
 // ------------------ COMPONENT ------------------
@@ -174,8 +171,8 @@ const UpcomingPaymentCard = ({ debts, payments = [], onPay }) => {
           className="flex items-center gap-4 bg-white border border-gray-100 rounded-2xl px-4 py-3 shadow-sm"
         >
           {/* NAME */}
-          <div className="min-w-[110px]">
-            <p className="text-sm font-bold text-gray-900">
+          <div className="sm:w-[160px] sm:shrink-0">
+            <p className="text-sm font-bold text-gray-900 truncate">
               {payment.label}
             </p>
             <p className="text-xs text-gray-400 capitalize">
@@ -184,7 +181,7 @@ const UpcomingPaymentCard = ({ debts, payments = [], onPay }) => {
           </div>
 
           {/* AMOUNT */}
-          <div className="min-w-[110px]">
+          <div className="sm:w-[130px] sm:shrink-0">
             <p className="text-lg font-semibold text-gray-900">
               {formatCurrency(payment.amount)}
             </p>
@@ -200,9 +197,7 @@ const UpcomingPaymentCard = ({ debts, payments = [], onPay }) => {
 
           {/* DATE */}
           <div className="flex-1 text-right">
-            <p className="text-[10px] text-gray-400 uppercase font-bold">
-              Due
-            </p>
+            <p className="text-[10px] text-gray-400 uppercase font-bold">Due</p>
             <p className="text-sm font-medium text-gray-900">
               {formatDate(payment.paymentDate)}
             </p>
