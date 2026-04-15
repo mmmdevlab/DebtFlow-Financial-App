@@ -2,11 +2,13 @@ const getToken = () => localStorage.getItem("token");
 const BASE_URL = import.meta.env.VITE_BACK_END_SERVER_URL;
 
 export const apiFetch = async (endpoint, options = {}) => {
-  const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-  const url = endpoint.startsWith("http")
-    ? endpoint
-    : `${BASE_URL}/api${cleanEndpoint}`;
+  const token = getToken();
+  console.log("Token being sent:", token);
 
+  const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  const url = `${BASE_URL}/api${cleanEndpoint}`;
+
+  console.log("Fetching:", url);
   const res = await fetch(url, {
     ...options,
     headers: {
@@ -30,6 +32,8 @@ export const apiFetch = async (endpoint, options = {}) => {
   }
 
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error || data.error || "Request failed");
+  if (!res.ok) {
+    throw new Error(data.error || data.error || "Request failed");
+  }
   return data;
 };

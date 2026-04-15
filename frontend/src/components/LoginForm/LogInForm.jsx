@@ -8,20 +8,22 @@ import { UserContext } from "../../context/UserContext";
 const LoginForm = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
-  // const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
 
   const handleChange = (evt) => {
-    // setMessage("");
+    setMessage("");
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("login submitted");
+    setMessage("");
 
     try {
       const userPayload = await logIn(formData);
@@ -29,13 +31,15 @@ const LoginForm = () => {
       navigate("/dashboard");
     } catch (error) {
       console.error(error);
-      // setMessage(error.message);
+      setMessage(error.message);
     }
   };
 
   return (
     <main>
-      {/* <p>{message}</p> */}
+      {message && (
+        <p className="text-red-500 bg-red-50 p-2 rounded">{message}</p>
+      )}
       <form
         onSubmit={handleSubmit}
         autoComplete="off"

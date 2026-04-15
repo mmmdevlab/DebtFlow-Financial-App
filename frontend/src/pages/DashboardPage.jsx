@@ -75,10 +75,6 @@ const DashboardPage = () => {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Upcoming debt payments
-        </h1>
-
         <PaymentList
           debts={debts}
           payments={payments}

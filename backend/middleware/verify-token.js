@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
-
+  // console.log("Auth header received:", authHeader);
+  // console.log("JWT_SECRET exists:", !!process.env.JWT_SECRET);
   if (!authHeader) return res.status(401).json({ err: "No Token Provided" });
 
   const token = authHeader.split(" ")[1];

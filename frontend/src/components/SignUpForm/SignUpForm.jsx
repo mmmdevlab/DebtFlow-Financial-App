@@ -8,7 +8,8 @@ import { UserContext } from "../../context/UserContext";
 const SignUpForm = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
-  // const [message, setMessage] = useState("");
+
+  const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -19,20 +20,21 @@ const SignUpForm = () => {
   const { username, email, password, passwordConf } = formData;
 
   const handleChange = (evt) => {
-    // setMessage("");
+    setMessage("");
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("signup submitted");
+    setMessage("");
+
     try {
       const newUser = await signUp(formData);
       setUser(newUser);
       navigate("/dashboard");
     } catch (error) {
-      console.error(error);
-      // setMessage(error.message);
+      // console.error(error);
+      setMessage(error.message);
     }
   };
 
@@ -42,7 +44,6 @@ const SignUpForm = () => {
 
   return (
     <main>
-      {/* <p>{message}</p> */}
       <form
         autoComplete="off"
         onSubmit={handleSubmit}
@@ -56,6 +57,12 @@ const SignUpForm = () => {
             Start tracking your debt today
           </p>
         </div>
+
+        {message && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-lg text-sm font-medium">
+            {message}
+          </div>
+        )}
 
         <label htmlFor="username" className="flex flex-col gap-1">
           <span className="text-xs font-semibold tracking-widest uppercase text-gray-400">

@@ -36,7 +36,7 @@ const calculateOneOffAmount = (debt) => {
 };
 
 const calculateMonthlyPayment = (debt) => {
-  const P = Number(debt.principal);
+  const P = Number(debt.principle_amount);
   const r = debt.interest_rate / 100 / 12;
 
   const totalMonths =
@@ -204,9 +204,7 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
     <div className="flex flex-col gap-4">
       {overdue.length > 0 && (
         <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">
-            Overdue Payments
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Overdue Payments</h1>
 
           {overdue.map((item) => (
             <div key={item._id}>
@@ -246,7 +244,12 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
                   </div>
 
                   <div className="sm:shrink-0">
-                    <ActionButton variant="danger" onClick={() => setOpenId(openId === item._id ? null : item._id)}>
+                    <ActionButton
+                      variant="danger"
+                      onClick={() =>
+                        setOpenId(openId === item._id ? null : item._id)
+                      }
+                    >
                       <CreditCard size={14} />
                     </ActionButton>
                   </div>
@@ -269,7 +272,9 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
 
       {upcoming.length > 0 && (
         <div className="flex flex-col gap-2">
-          <p className="text-gray-500 font-medium text-sm">Upcoming Payments</p>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Upcoming Payments
+          </h1>
 
           {upcoming.map((item) => (
             <div key={item._id}>
@@ -311,7 +316,12 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
                     </p>
                   </div>
                   <div className="sm:shrink-0">
-                    <ActionButton variant="secondary" onClick={() => setOpenId(openId === item._id ? null : item._id)}> //
+                    <ActionButton
+                      variant="secondary"
+                      onClick={() =>
+                        setOpenId(openId === item._id ? null : item._id)
+                      }
+                    >
                       <CreditCard size={14} />
                     </ActionButton>
                   </div>

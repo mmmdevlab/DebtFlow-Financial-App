@@ -10,8 +10,8 @@ const handleAuthRequest = async (endpoint, formData) => {
 
     const data = await res.json();
 
-    if (data.error || data.error) {
-      throw new Error(data.err || data.error);
+    if (!res.ok) {
+      throw new Error(data.err || "Authentication failed");
     }
 
     if (data.token) {
@@ -19,9 +19,9 @@ const handleAuthRequest = async (endpoint, formData) => {
       return JSON.parse(atob(data.token.split(".")[1])).payload;
     }
 
-    throw new Error("Invalid response from server");
+    throw new Error("Invalid response from server: No token received");
   } catch (error) {
-    console.error(`Auth Error (${endpoint}):`, error);
+    console.error(`Auth Error (${endpoint}):`, error.message);
     throw error;
   }
 };

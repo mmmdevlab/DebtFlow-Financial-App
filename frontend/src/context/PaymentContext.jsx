@@ -13,17 +13,24 @@ import {
 } from "../services/paymentService";
 
 import { DebtContext } from "./DebtContext";
+import { UserContext } from "./UserContext";
 
 const PaymentContext = createContext();
 
 export const PaymentProvider = ({ children }) => {
-  const {refetch: refetchDebts } = useContext(DebtContext)
+  const { refetch: refetchDebts } = useContext(DebtContext);
+  const { user } = useContext(UserContext);
 
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchPayments = useCallback(async () => {
+    if (!user) {
+      setPayments([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -35,7 +42,7 @@ export const PaymentProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     fetchPayments();
