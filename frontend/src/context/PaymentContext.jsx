@@ -5,8 +5,14 @@ import {
   useEffect,
   useCallback,
 } from "react";
+import {
+  getAllPayments,
+  createPayment,
+  updatePayment as updatePaymentService,
+  deletePayment as deletePaymentService,
+} from "../services/paymentService";
 
-export const PaymentContext = createContext();
+const PaymentContext = createContext();
 
 export const PaymentProvider = ({ children }) => {
   const [payments, setPayments] = useState([]);
@@ -15,20 +21,12 @@ export const PaymentProvider = ({ children }) => {
 
   const fetchPayments = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setPayments([]);
-        return;
-      }
-      const res = await fetch(
-        `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/payments`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      const data = await res.json();
+      const data = await getAllPayments();
       setPayments(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Failed to fetch payments", err);
+    } catch (error) {
+      console.error("Fetch Error:", error);
       setError("Failed to load payments.");
     } finally {
       setLoading(false);
@@ -39,64 +37,36 @@ export const PaymentProvider = ({ children }) => {
     fetchPayments();
   }, [fetchPayments]);
 
-  const addPayment = async ({ debtId, amount, payment_date }) => {
+  const addPayment = async (payload) => {
     setError(null);
     try {
-      const token = localStorage.getItem("token");
-      await fetch(`${import.meta.env.VITE_BACK_END_SERVER_URL}/api/payments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          debt_id: debtId,
-          amount: Number(amount),
-          payment_date,
-        }),
-      });
+      await createPayment(payload);
       await fetchPayments();
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error("Add Error:", error);
       setError("Error logging payment.");
     }
   };
-  const updatePayment = async (paymentId, { amount, payment_date }) => {
+
+  const updatePayment = async (id, payload) => {
     setError(null);
     try {
-      const token = localStorage.getItem("token");
-      await fetch(
-        `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/payments/${paymentId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ amount: Number(amount), payment_date }),
-        },
-      );
+      await updatePaymentService(id, payload);
       await fetchPayments();
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error("Update Error:", error);
       setError("Error updating payment.");
     }
   };
 
-  const deletePayment = async (paymentId) => {
+  const deletePayment = async (id) => {
+    setError(null);
     try {
-      const token = localStorage.getItem("token");
-      await fetch(
-        `${import.meta.env.VITE_BACK_END_SERVER_URL}/api/payments/${paymentId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      setPayments((prev) => prev.filter((p) => p._id !== paymentId));
-    } catch (err) {
-      console.error("Failed to delete payment", err);
-      setError("Failed to delete payment.");
+      await deletePaymentService(id);
+      setPayments((prev) => prev.filter((p) => p._id !== id));
+    } catch (error) {
+      console.error("Delete Error:", error);
+      setError("Error deleting payment.");
     }
   };
 
@@ -120,6 +90,6 @@ export const PaymentProvider = ({ children }) => {
 export const usePayments = () => {
   const context = useContext(PaymentContext);
   if (!context)
-    throw new Error("usePayments must be used inside PaymentProvider");
+    throw new Error("usePayments must be used inside a PaymentProvider");
   return context;
 };

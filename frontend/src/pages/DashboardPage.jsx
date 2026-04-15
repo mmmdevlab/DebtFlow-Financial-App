@@ -1,10 +1,9 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { DebtContext } from "../context/DebtContext";
 import { usePayments } from "../context/PaymentContext";
-import UpcomingCard from "../components/Dashboard/UpcomingCard";
-import PaymentForm from "../components/Payment/PaymentForm";
-import { getAllPayments } from "../components/Dashboard/UpcomingCard";
+import { getAllPayments } from "../components/Dashboard/PaymentList";
+import PaymentList from "../components/Dashboard/PaymentList";
 
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-SG", {
@@ -80,7 +79,7 @@ const DashboardPage = () => {
           Upcoming debt payments
         </h1>
 
-        <UpcomingCard
+        <PaymentList
           debts={debts}
           payments={payments}
           onSuccess={refetchPayments}

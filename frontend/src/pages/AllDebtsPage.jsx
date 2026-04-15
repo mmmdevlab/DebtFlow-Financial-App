@@ -3,7 +3,6 @@ import { DebtContext } from "../context/DebtContext";
 import { deleteDebt } from "../services/debtService";
 import DebtCard from "../components/Debt/DebtCard";
 import PaymentHistoryLog from "../components/Payment/PaymentHistoryLog";
-import { Divide } from "lucide-react";
 
 const DEBT_FILTERS = ["all", "creditCard", "mortgage", "loan"];
 const PAYMENT_FILTERS = ["all", "creditCard", "mortgage", "loan"];
@@ -17,8 +16,8 @@ const AllDebtsPage = () => {
     try {
       await deleteDebt(id);
       await refetch();
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       alert("Error deleting debt");
     }
   };

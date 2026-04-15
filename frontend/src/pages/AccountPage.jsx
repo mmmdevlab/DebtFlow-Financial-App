@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import { getUserProfile } from "../services/userService";
+import { getUserProfile, deleteUser } from "../services/userService";
 import ActionButton from "../components/UI/ActionButton";
 import { Trash2 } from "lucide-react";
 
@@ -25,17 +25,20 @@ const AccountPage = () => {
   }, [authUser]);
 
   const handleDeleteAccount = async () => {
+    if (!profile?._id) return;
+
     const confirmDelete = window.confirm(
       "Are you sure you want to delete your account? This will also delete all your debts and payment history. This action cannot be undone.",
     );
 
     if (confirmDelete) {
       try {
-        // TODO: await deleteUser(profile._id);
+        await deleteUser(profile._id);
         alert("Account deleted successfully.");
         logout();
       } catch (error) {
         console.error("Failed to delete account", error);
+        alert("Error deleting account. Please try again.");
       }
     }
   };
@@ -66,7 +69,7 @@ const AccountPage = () => {
               {profile.username}
             </p>
             <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
-              {profile.accountType} Account
+              {profile.accountType || "Personal"} Account
             </p>
           </div>
         </div>
