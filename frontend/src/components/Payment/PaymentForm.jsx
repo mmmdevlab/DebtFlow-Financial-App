@@ -4,7 +4,7 @@ import { usePayments } from "../../context/PaymentContext";
 const labelStyle =
   "text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1";
 const inputStyle =
-  "w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition";
+  "w-full px-4 py-3 rounded-3xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition";
 
 const PaymentForm = ({ debt, onClose, onSuccess, editingPayment }) => {
   const { addPayment, updatePayment } = usePayments();
@@ -46,7 +46,7 @@ const PaymentForm = ({ debt, onClose, onSuccess, editingPayment }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-3 pt-4 flex flex-col gap-5 border border-gray-200 rounded-xl p-6 bg-white shadow-sm"
+      className="mt-3 pt-4 flex flex-col gap-5 border border-gray-200 rounded-3xl p-6 bg-white shadow-sm"
     >
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col">

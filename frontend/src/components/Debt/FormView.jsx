@@ -9,7 +9,7 @@ const FormView = ({
     "text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1";
 
   const inputStyle =
-    "w-full px-4 py-3 rounded-3xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition";
+    "w-full px-4 py-3 rounded-3xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition appearance-none cursor-pointer";
 
   return (
     <form
@@ -17,7 +17,7 @@ const FormView = ({
       className="flex flex-col gap-5 border border-gray-200 rounded-3xl p-6 bg-white shadow-sm"
     >
       <div>
-        <h1 className="text-2xl font-extrabold text-gray-900">Add New Debt</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Add New Debt</h1>
         <p className="text-sm text-gray-400 mt-1">
           Enter the details of your liability below
         </p>

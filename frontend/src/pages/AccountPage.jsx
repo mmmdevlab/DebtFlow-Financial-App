@@ -65,9 +65,9 @@ const AccountPage = () => {
             {initials}
           </div>
           <div>
-            <p className="text-xl font-bold text-gray-900 capitalize">
+            <h1 className="text-xl font-bold text-gray-900 capitalize">
               {profile.username}
-            </p>
+            </h1>
             <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">
               {profile.accountType || "Personal"} Account
             </p>
