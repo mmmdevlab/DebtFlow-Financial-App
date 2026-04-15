@@ -28,7 +28,7 @@ app.use("/auth", authRouter);
 app.get("/api/users/profile", verifyToken, usersController.getUserProfile);
 app.get("/api/users", verifyToken, usersController.getAllUsers);
 app.get("/api/users/:id", verifyToken, usersController.getUserById);
-app.delete("/api/users/:id", verifyToken, usersController.deleteUser);
+app.delete("/api/users/me", verifyToken, usersController.deleteUser);
 
 app.get("/api/debts", verifyToken, debtsController.getAllDebts);
 app.post("/api/debts", verifyToken, debtsController.createDebt);

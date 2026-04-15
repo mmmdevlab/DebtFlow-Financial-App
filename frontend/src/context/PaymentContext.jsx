@@ -12,9 +12,13 @@ import {
   deletePayment as deletePaymentService,
 } from "../services/paymentService";
 
+import { DebtContext } from "./DebtContext";
+
 const PaymentContext = createContext();
 
 export const PaymentProvider = ({ children }) => {
+  const {refetch: refetchDebts } = useContext(DebtContext)
+
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -42,6 +46,7 @@ export const PaymentProvider = ({ children }) => {
     try {
       await createPayment(payload);
       await fetchPayments();
+      await refetchDebts();
     } catch (error) {
       console.error("Add Error:", error);
       setError("Error logging payment.");
@@ -53,6 +58,7 @@ export const PaymentProvider = ({ children }) => {
     try {
       await updatePaymentService(id, payload);
       await fetchPayments();
+      await refetchDebts();
     } catch (error) {
       console.error("Update Error:", error);
       setError("Error updating payment.");
@@ -64,6 +70,7 @@ export const PaymentProvider = ({ children }) => {
     try {
       await deletePaymentService(id);
       setPayments((prev) => prev.filter((p) => p._id !== id));
+      await refetchDebts();
     } catch (error) {
       console.error("Delete Error:", error);
       setError("Error deleting payment.");

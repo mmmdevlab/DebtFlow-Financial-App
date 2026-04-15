@@ -33,8 +33,8 @@ const PaymentForm = ({ debt, onClose, onSuccess, editingPayment }) => {
         return;
       }
       await addPayment({
-        debtId: debt._id,
-        amount: formData.amount,
+        debt_id: debt._id,
+        amount: Number(formData.amount),
         payment_date: formData.payment_date,
       });
     }

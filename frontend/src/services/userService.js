@@ -5,5 +5,5 @@ export const getUserProfile = async () => {
 };
 
 export const deleteUser = async (id) => {
-  return apiFetch(`/users/${id}`, { method: "DELETE" });
+  return apiFetch(`/users/me`, { method: "DELETE" });
 };

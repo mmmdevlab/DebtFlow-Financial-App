@@ -30,7 +30,7 @@ const getUserById = async (req, res) => {
 /* ------ DELETE -------*/
 const deleteUser = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.user._id;
 
     const debts = await Debt.find({ user_id: id });
     const debtIds = debts.map((debt) => debt._id);

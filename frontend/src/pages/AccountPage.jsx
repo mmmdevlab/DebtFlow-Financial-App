@@ -33,7 +33,7 @@ const AccountPage = () => {
 
     if (confirmDelete) {
       try {
-        await deleteUser(profile._id);
+        await deleteUser();
         alert("Account deleted successfully.");
         logout();
       } catch (error) {
