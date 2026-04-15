@@ -1,8 +1,9 @@
 import React, { useContext, useMemo } from "react";
 import { DebtContext } from "../context/DebtContext";
-import { PieChart, PieArcSeries, BarChart, BarSeries, Bar } from "reaviz";
+import { PieChart, PieArcSeries, BarChart, BarSeries } from "reaviz";
 
-const PIE_COLORS = ["#10b981", "#3b82f6", "#f59e0b"];
+const PIE_COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ec4899"];
+const PROGRESS_COLORS = ["#10b981", "#ef4444"];
 const BAR_COLORS = { original: "#d1d5db", remaining: "#10b981" };
 
 const LegendItem = ({ color, label }) => (
@@ -18,8 +19,26 @@ const LegendItem = ({ color, label }) => (
 const InsightsPage = () => {
   const { debts, loading } = useContext(DebtContext);
 
+  const totalProgressData = useMemo(() => {
+    if (!debts?.length) return [];
+    const totalOriginal = debts.reduce(
+      (sum, d) => sum + Number(d.principle_amount || 0),
+      0,
+    );
+    const totalRemaining = debts.reduce(
+      (sum, d) => sum + Number(d.current_balance || 0),
+      0,
+    );
+    const totalPaid = Math.max(0, totalOriginal - totalRemaining);
+
+    return [
+      { key: "Paid Off", data: totalPaid },
+      { key: "Remaining", data: totalRemaining },
+    ];
+  }, [debts]);
+
   const categoryData = useMemo(() => {
-    if (!debts || debts.length === 0) return [];
+    if (!debts?.length) return [];
     const groups = debts.reduce((acc, debt) => {
       const cat = debt.category || "Other";
       acc[cat] = (acc[cat] || 0) + Number(debt.current_balance || 0);
@@ -31,105 +50,87 @@ const InsightsPage = () => {
     }));
   }, [debts]);
 
-  const progressData = useMemo(() => {
-    if (!debts || debts.length === 0) return [];
-    return debts.map((d) => ({
-      key: d.label,
-      data: [
-        { key: "Original", data: Number(d.principle_amount) || 0 },
-        { key: "Remaining", data: Number(d.current_balance) || 0 },
-      ],
+  const frequencyData = useMemo(() => {
+    if (!debts?.length) return [];
+    const counts = debts.reduce((acc, d) => {
+      const freq = d.frequency || "one-time payment";
+      acc[freq] = (acc[freq] || 0) + 1;
+      return acc;
+    }, {});
+    return Object.keys(counts).map((key) => ({
+      key: key.charAt(0).toUpperCase() + key.slice(1),
+      data: counts[key],
     }));
   }, [debts]);
 
   if (loading)
+    return <p className="p-6 text-center text-gray-400">Loading charts...</p>;
+  if (!debts?.length)
     return (
-      <div className="p-10 text-center text-gray-400">Loading charts...</div>
-    );
-
-  if (!debts || debts.length === 0)
-    return (
-      <div className="p-10 text-center text-gray-400">
-        No debt data yet. Add some debts to see your insights.
-      </div>
+      <p className="p-6 text-center text-gray-400">No debt data available.</p>
     );
 
   return (
-    <div className="flex flex-col gap-8 w-full sm:max-w-2xl mx-auto border border-gray-100 rounded-2xl p-6 bg-white shadow-sm mb-24 mt-6">
-      <header>
+    <div className="flex flex-col max-w-3xl mx-auto px-4 py-6 gap-8 mb-24">
+      <div>
         <h1 className="text-2xl font-bold text-gray-900">Financial Insights</h1>
-        <p className="text-sm text-gray-400 mt-1">
-          Based on your {debts.length} debt{debts.length !== 1 ? "s" : ""}
+        <p className="text-sm text-gray-400">
+          Overview of your {debts.length} active debts
         </p>
-      </header>
+      </div>
 
-      <section className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-        <h3 className="text-sm font-bold text-gray-700 mb-1 uppercase tracking-wider">
-          Repayment Progress
-        </h3>
-        <p className="text-xs text-gray-400 mb-3">
-          Original amount vs what you still owe
-        </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <section className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm flex flex-col items-center">
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest self-start mb-4">
+            Overall Freedom
+          </h2>
+          <PieChart
+            width={280}
+            height={200}
+            data={totalProgressData}
+            series={
+              <PieArcSeries doughnut={true} colorScheme={PROGRESS_COLORS} />
+            }
+          />
+          <div className="flex gap-4 mt-2">
+            <LegendItem color={PROGRESS_COLORS[0]} label="Paid" />
+            <LegendItem color={PROGRESS_COLORS[1]} label="Remaining" />
+          </div>
+        </section>
 
-        <div className="flex gap-4 mb-4">
-          <LegendItem color={BAR_COLORS.original} label="Original amount" />
-          <LegendItem color={BAR_COLORS.remaining} label="Remaining balance" />
-        </div>
+        <section className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm">
+          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+            Payment Frequency
+          </h2>
+          <BarChart
+            width={280}
+            height={200}
+            data={frequencyData}
+            series={<BarSeries colorScheme={[PIE_COLORS[1]]} />}
+          />
+        </section>
+      </div>
 
-        <div className="w-full flex justify-center overflow-x-auto">
-          {progressData.length > 0 ? (
-            <BarChart
-              id="progress-chart"
-              width={500}
-              height={250}
-              data={progressData}
-              series={
-                <BarSeries
-                  type="grouped"
-                  animated={false}
-                  colorScheme={[BAR_COLORS.original, BAR_COLORS.remaining]}
-                  bar={<Bar rounded={false} />}
-                />
-              }
-            />
-          ) : (
-            <p className="text-gray-400 italic text-sm">No data available</p>
-          )}
-        </div>
-      </section>
-
-      <section className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-        <h3 className="text-sm font-bold text-gray-700 mb-1 uppercase tracking-wider">
-          Debt by Category
-        </h3>
-        <p className="text-xs text-gray-400 mb-3">
-          Where your remaining balance sits
-        </p>
-
-        <div className="flex flex-wrap gap-4 mb-4">
-          {categoryData.map((item, i) => (
-            <LegendItem
-              key={item.key}
-              color={PIE_COLORS[i % PIE_COLORS.length]}
-              label={item.key}
-            />
-          ))}
-        </div>
-
-        <div className="h-64 w-full flex justify-center">
-          {categoryData.length > 0 ? (
-            <PieChart
-              id="pie-chart"
-              width={350}
-              height={250}
-              data={categoryData}
-              series={
-                <PieArcSeries animated={false} colorScheme={PIE_COLORS} />
-              }
-            />
-          ) : (
-            <p className="text-gray-400 italic text-sm">No data available</p>
-          )}
+      <section className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm">
+        <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+          Debt Distribution
+        </h2>
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          <PieChart
+            width={300}
+            height={250}
+            data={categoryData}
+            series={<PieArcSeries colorScheme={PIE_COLORS} />}
+          />
+          <div className="flex flex-col gap-2">
+            {categoryData.map((item, i) => (
+              <LegendItem
+                key={item.key}
+                color={PIE_COLORS[i % PIE_COLORS.length]}
+                label={`${item.key}: $${item.data.toLocaleString()}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
     </div>

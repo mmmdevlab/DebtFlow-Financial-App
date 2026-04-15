@@ -35,7 +35,7 @@ const PaymentCard = ({ payment, debt }) => {
           <p className="text-sm font-bold text-gray-900 truncate">
             {debt?.label ?? "Unknown debt"}
           </p>
-          <p className="text-xs text-gray-400 capitalize">
+          <p className="text-xs text-gray-500 capitalize">
             {debt?.category ?? "—"}
           </p>
         </div>
@@ -47,7 +47,7 @@ const PaymentCard = ({ payment, debt }) => {
         </div>
 
         <div className="sm:flex-1">
-          <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold">
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">
             Paid on
           </p>
           <p className="text-sm font-bold text-gray-900">

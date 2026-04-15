@@ -5,10 +5,15 @@ const ActionButton = ({
   onClick,
   variant = "primary",
   className = "",
+  disabled,
   ...props
 }) => {
   const baseStyles =
     "flex items-center justify-center gap-2 rounded-full transition-all active:scale-95 flex-shrink-0 font-bold text-xs";
+
+  const disabledStyles = disabled
+    ? "opacity-30 cursor-not-allowed grayscale active:scale-100"
+    : "cursor-pointer";
 
   const variants = {
     primary: "bg-gray-900 text-white hover:bg-gray-700",
@@ -24,11 +29,13 @@ const ActionButton = ({
 
   return (
     <button
+      disabled={disabled}
       onClick={(e) => {
+        if (disabled) return;
         e.stopPropagation();
         onClick?.(e);
       }}
-      className={`${baseStyles} ${variants[variant]} ${padding} ${className}`}
+      className={`${baseStyles} ${variants[variant]} ${padding} ${disabledStyles} ${className}`}
       {...props}
     >
       {children}

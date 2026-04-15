@@ -26,7 +26,6 @@ const AddDebtForm = ({ selectedData, isEditing, onSubmit, onCancel }) => {
     const { name, value, type } = e.target;
     const finalValue = type === "number" ? parseFloat(value) || 0 : value;
 
-    // 🔥 NEW: Category → Frequency logic
     if (name === "category") {
       let updatedFrequency = "";
 
@@ -35,7 +34,7 @@ const AddDebtForm = ({ selectedData, isEditing, onSubmit, onCancel }) => {
       } else if (value === "creditCard") {
         updatedFrequency = "one-time payment";
       } else if (value === "loan") {
-        updatedFrequency = ""; // user must choose
+        updatedFrequency = "";
       }
 
       setFormData((prev) => ({

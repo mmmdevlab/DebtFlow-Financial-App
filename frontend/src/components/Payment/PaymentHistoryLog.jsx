@@ -3,7 +3,7 @@ import { usePayments } from "../../context/PaymentContext";
 import { DebtContext } from "../../context/DebtContext";
 import PaymentCard from "./PaymentCard";
 
-const PaymentHistoryLog = () => {
+const PaymentHistoryLog = ({ filter }) => {
   const { payments, loading: paymentsLoading, error } = usePayments();
   const { debts, loading: debtsLoading } = useContext(DebtContext);
 
@@ -11,14 +11,29 @@ const PaymentHistoryLog = () => {
     return <p className="text-gray-400 text-sm">Loading payments...</p>;
   if (error) return <p className="text-red-400 text-sm">{error}</p>;
 
+  const filteredPayments = payments.filter((payment) => {
+    if (filter === "all") return true;
+
+    const debtId =
+      typeof payment.debt_id === "object"
+        ? payment.debt_id?._id?.toString()
+        : payment.debt_id;
+
+    const associatedDebt = debts.find(
+      (d) => d._id?.toString() === debtId?.toString(),
+    );
+
+    return associatedDebt?.category === filter;
+  });
+
   return (
     <div className="flex flex-col gap-2">
-      {payments.length === 0 ? (
+      {filteredPayments.length === 0 ? (
         <p className="text-sm text-gray-400 text-center py-8">
-          No payment records yet.
+          No {filter !== "all" ? filter : ""} payment records found.
         </p>
       ) : (
-        payments.map((payment) => {
+        filteredPayments.map((payment) => {
           const debtId =
             typeof payment.debt_id === "object"
               ? payment.debt_id?._id?.toString()
@@ -26,13 +41,6 @@ const PaymentHistoryLog = () => {
           const debt = debts.find(
             (d) => d._id?.toString() === debtId?.toString(),
           );
-          console.log("payment.debt_id:", payment.debt_id);
-          console.log("resolved debtId:", debtId);
-          console.log(
-            "debts available:",
-            debts.map((d) => d._id?.toString()),
-          );
-          console.log("matched debt:", debt);
 
           return (
             <PaymentCard key={payment._id} payment={payment} debt={debt} />

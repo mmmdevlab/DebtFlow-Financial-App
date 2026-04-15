@@ -25,17 +25,17 @@ const DashboardPage = () => {
   const activeCount = debts.filter((d) => d.status === "active").length;
   const overdueCount = allPayments.filter((p) => p.isOverdue).length;
 
-  if (loading) return <p className="p-6 text-gray-400">Loading...</p>;
+  if (loading) return <p className="p-6 text-gray-600">Loading...</p>;
   if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
-    <div className="flex flex-col gap-10 max-w-3xl mx-auto p-6">
+    <div className="flex flex-col px-4 max-w-3xl mx-auto gap-4 ">
       <h1 className="text-2xl font-bold text-gray-900">Your Dashboard</h1>
 
-      <section className="flex flex-col gap-4">
+      <section className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="w-full border border-gray-300 rounded-xl p-5 bg-white">
-            <p className="text-sm uppercase tracking-widest font-semibold">
+            <p className="text-sm uppercase tracking-widest font-semibold text-gray-600">
               Total Debt
             </p>
             <p className="text-2xl font-bold text-gray-900 mt-1">
@@ -44,7 +44,7 @@ const DashboardPage = () => {
           </div>
 
           <div className="w-full border border-gray-300 rounded-xl p-5 bg-white">
-            <p className="text-sm uppercase tracking-widest font-semibold">
+            <p className="text-sm uppercase tracking-widest font-semibold text-gray-600">
               Total Payments
             </p>
             <p className="text-2xl font-bold text-gray-900 mt-1">
@@ -54,8 +54,8 @@ const DashboardPage = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-2">
-          <div className="w-full rounded-xl p-5 bg-blue-50 border border-blue-300">
-            <p className="text-sm uppercase tracking-widest font-semibold">
+          <div className="w-full border border-blue-300 rounded-xl p-5 bg-blue-50">
+            <p className="text-sm uppercase tracking-widest font-semibold text-gray-600">
               Active Debts
             </p>
             <p className="text-2xl font-bold text-gray-900 mt-1">
@@ -63,8 +63,8 @@ const DashboardPage = () => {
             </p>
           </div>
 
-          <div className="w-full rounded-xl p-5 bg-red-50 border border-red-200">
-            <p className="text-sm uppercase tracking-widest font-semibold">
+          <div className="w-full border border-red-200 rounded-xl p-5 bg-red-50">
+            <p className="text-sm uppercase tracking-widest font-semibold text-gray-600">
               Overdue
             </p>
             <p className="text-2xl font-bold text-red-500 mt-1">
@@ -74,20 +74,22 @@ const DashboardPage = () => {
         </div>
       </section>
 
-      <section className="flex flex-col gap-4">
+      <section className="flex flex-col gap-2">
         <PaymentList
           debts={debts}
           payments={payments}
           onSuccess={refetchPayments}
         />
       </section>
-
-      <button
-        onClick={() => navigate("/log-entries")}
-        className="bg-green-500 text-white rounded-full px-6 py-3 font-bold uppercase tracking-widest text-sm hover:bg-green-600 transition"
-      >
-        + Add Debt
-      </button>
+      <div className="flex flex-col gap-2">
+        <button
+          type="button"
+          onClick={() => navigate("/log-entries")}
+          className="w-full py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition mt-4"
+        >
+          + Add Debt
+        </button>
+      </div>
     </div>
   );
 };

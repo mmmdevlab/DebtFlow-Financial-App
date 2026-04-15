@@ -46,7 +46,7 @@ const PaymentForm = ({ debt, onClose, onSuccess, editingPayment }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 mt-3 pt-4 border-t border-gray-100"
+      className="mt-3 pt-4 flex flex-col gap-5 border border-gray-200 rounded-xl p-6 bg-white shadow-sm"
     >
       <div className="grid grid-cols-2 gap-3">
         <label className="flex flex-col">

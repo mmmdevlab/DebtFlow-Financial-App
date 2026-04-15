@@ -22,7 +22,7 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("login submitted");
+    // console.log("login submitted");
     setMessage("");
 
     try {

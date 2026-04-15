@@ -58,14 +58,14 @@ const AccountPage = () => {
   ];
 
   return (
-    <div className="flex items-start justify-center p-6 min-h-screen">
-      <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+    <div className="max-w-3xl mx-auto px-4">
+      <div className="w-full max-w-md mx-auto bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm">
         <div className="flex items-center gap-4 px-6 py-6 border-b border-gray-100">
           <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-lg flex-shrink-0 border border-blue-100">
             {initials}
           </div>
           <div>
-            <p className="text-xl font-bold text-gray-900">
+            <p className="text-xl font-bold text-gray-900 capitalize">
               {profile.username}
             </p>
             <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">

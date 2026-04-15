@@ -26,7 +26,7 @@ const AllDebtsPage = () => {
   if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
-    <div className="flex flex-col p-6 max-w-3xl mx-auto gap-10">
+    <div className="flex flex-col px-4 max-w-3xl mx-auto gap-10">
       <section className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold text-gray-900">All Debts</h1>
 
@@ -83,7 +83,7 @@ const AllDebtsPage = () => {
             </button>
           ))}
         </div>
-        <PaymentHistoryLog />
+        <PaymentHistoryLog filter={activePaymentFilter} />
       </section>
     </div>
   );

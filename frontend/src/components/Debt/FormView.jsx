@@ -9,12 +9,12 @@ const FormView = ({
     "text-xs font-semibold tracking-widest uppercase text-gray-400 mb-1";
 
   const inputStyle =
-    "w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition";
+    "w-full px-4 py-3 rounded-3xl border border-gray-200 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 bg-white transition";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-5 max-w-2xl min-w-auto border border-gray-200 rounded-xl p-6 bg-white shadow-md"
+      className="flex flex-col gap-5 border border-gray-200 rounded-3xl p-6 bg-white shadow-sm"
     >
       <div>
         <h1 className="text-2xl font-extrabold text-gray-900">Add New Debt</h1>
@@ -111,11 +111,9 @@ const FormView = ({
           />
         </label>
 
-        {/* 🔥 UPDATED FREQUENCY FIELD */}
         <label className="flex flex-col">
           <span className={labelStyle}>Frequency</span>
 
-          {/* Mortgage */}
           {formData.category === "mortgage" && (
             <select
               name="frequency"
@@ -127,7 +125,6 @@ const FormView = ({
             </select>
           )}
 
-          {/* Credit Card */}
           {formData.category === "creditCard" && (
             <select
               name="frequency"
@@ -139,7 +136,6 @@ const FormView = ({
             </select>
           )}
 
-          {/* Loan */}
           {formData.category === "loan" && (
             <select
               name="frequency"
@@ -174,7 +170,7 @@ const FormView = ({
         <div className="flex gap-3 mt-4">
           <button
             type="submit"
-            className="flex-1 py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition shadow-lg shadow-green-100"
+            className="flex-1 py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition"
           >
             Update Debt
           </button>
@@ -189,7 +185,7 @@ const FormView = ({
       ) : (
         <button
           type="submit"
-          className="w-full py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition mt-4 shadow-lg shadow-green-100"
+          className="w-full py-3 bg-green-500 text-white rounded-full font-bold text-sm hover:bg-green-600 transition mt-4"
         >
           Add Debt Record
         </button>

@@ -17,7 +17,7 @@ const SuccessView = ({ submittedData, handleReset }) => {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto border border-gray-200 rounded-xl p-6 bg-white shadow-md text-center">
+    <div className="border border-gray-200 rounded-xl bg-white shadow-sm text-center overflow-hidden">
       <div className="bg-green-50 border-b border-green-100 px-6 py-5 text-center">
         <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-3">
           <svg

@@ -79,7 +79,7 @@ const AuthPage = () => {
                 {b.icon}
               </div>
               <div>
-                <h2 className="font-bold text-green-600 text-lg">{b.title}</h2>
+                <h2 className="font-bold text-black text-lg">{b.title}</h2>
                 <p className="text-black text-sm">{b.desc}</p>
               </div>
             </div>

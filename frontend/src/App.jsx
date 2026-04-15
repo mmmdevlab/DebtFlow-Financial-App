@@ -14,14 +14,13 @@ import SignupForm from "./components/SignUpForm/SignUpForm";
 
 const App = () => {
   const { user } = useContext(UserContext);
-
   const isLoggedIn = !!user;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar isLoggedIn={isLoggedIn} />
 
-      <main className={user ? "pt-14 pb-16" : ""}>
+      <main className={user ? "pt-14 pb-24" : ""}>
         <Routes>
           {/* open routes */}
           <Route path="/auth" element={<AuthPage />}>

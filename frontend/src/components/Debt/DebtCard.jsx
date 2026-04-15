@@ -51,6 +51,9 @@ const DebtCard = ({
   const [isPaying, setIsPaying] = useState(false);
 
   const status = getStatus(debt);
+
+  const isPaidOff = status === "paidOff";
+
   const { label, badge, dateClass } = statusConfig[status];
 
   return (
@@ -67,7 +70,7 @@ const DebtCard = ({
           <p className="text-sm font-bold text-gray-900 truncate">
             {debt.label}
           </p>
-          <p className="text-xs text-gray-400 capitalize">{debt.category}</p>
+          <p className="text-xs text-gray-500 capitalize">{debt.category}</p>
         </div>
 
         <div className="sm:w-[130px] sm:shrink-0">
@@ -85,7 +88,7 @@ const DebtCard = ({
         </div>
 
         <div className="sm:flex-1">
-          <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold">
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">
             Due
           </p>
           <p className={`text-sm font-bold ${dateClass}`}>
@@ -101,13 +104,16 @@ const DebtCard = ({
             <>
               <ActionButton
                 variant="secondary"
+                disabled={isPaidOff}
                 onClick={() => {
+                  if (isPaidOff) return;
                   setIsPaying((prev) => !prev);
                   setIsEditing(false);
                 }}
               >
                 <CreditCard size={14} />
               </ActionButton>
+
               <ActionButton onClick={() => setIsEditing((prev) => !prev)}>
                 <Pencil size={14} />
               </ActionButton>
@@ -122,7 +128,8 @@ const DebtCard = ({
           ) : (
             <ActionButton
               variant="secondary"
-              onClick={() => onLogPayment(debt)}
+              disabled={isPaidOff}
+              onClick={() => !isPaidOff && onLogPayment(debt)}
             >
               <CreditCard size={14} />
               Pay Now
