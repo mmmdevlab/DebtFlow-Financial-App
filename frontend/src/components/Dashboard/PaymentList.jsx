@@ -85,12 +85,11 @@ export const getAllPayments = (debts, payments) => {
         };
       }
 
-      // ---------- MONTHLY (FIXED) ----------
+      // ---------- MONTHLY ----------
       if (debt.frequency === "monthly") {
         const startDate = new Date(debt.start_date);
         const billingDay = startDate.getDate();
 
-        // current cycle start
         const cycleStart = new Date(today);
         cycleStart.setDate(billingDay);
         cycleStart.setHours(0, 0, 0, 0);
@@ -99,20 +98,17 @@ export const getAllPayments = (debts, payments) => {
           cycleStart.setMonth(cycleStart.getMonth() - 1);
         }
 
-        // next cycle
         const nextCycle = new Date(cycleStart);
         nextCycle.setMonth(nextCycle.getMonth() + 1);
 
-        // check if paid in this cycle
         const paidThisCycle = payments.some((p) => {
-          if (String(p.debt_id) === String(debt._id)) return false;
+          if (String(p.debt_id) !== String(debt._id)) return false;
           const d = new Date(p.payment_date);
           return d >= cycleStart && d < nextCycle;
         });
 
         amount = calculateMonthlyPayment(debt);
 
-        // not paid
         if (!paidThisCycle) {
           return {
             ...debt,
@@ -122,24 +118,16 @@ export const getAllPayments = (debts, payments) => {
           };
         }
 
-        // paid
-        if (paidThisCycle) {
-          const upcomingDate = new Date(nextCycle);
+        const upcomingDate = new Date(nextCycle);
 
-          // 🔑 ONLY show next payment AFTER current cycle has passed
-          if (today >= nextCycle) {
-            if (upcomingDate <= next30Days) {
-              return {
-                ...debt,
-                paymentDate: upcomingDate,
-                amount,
-                isOverdue: false,
-              };
-            }
-          }
-
-  return null;
-}
+        if (upcomingDate >= today && upcomingDate <= next30Days) {
+          return {
+            ...debt,
+            paymentDate: upcomingDate,
+            amount,
+            isOverdue: false,
+          };
+        }
 
         return null;
       }
@@ -147,37 +135,54 @@ export const getAllPayments = (debts, payments) => {
       // ---------- ANNUAL ----------
       if (debt.frequency === "annually") {
         const startDate = new Date(debt.start_date);
+        const billingMonth = startDate.getMonth();
+        const billingDay = startDate.getDate();
 
-        const lastPayment = payments
-          .filter((p) => p.debt_id === debt._id)
-          .sort(
-            (a, b) =>
-              new Date(b.payment_date) - new Date(a.payment_date),
-          )[0];
+        const cycleStart = new Date(today);
+        cycleStart.setMonth(billingMonth);
+        cycleStart.setDate(billingDay);
+        cycleStart.setHours(0, 0, 0, 0);
 
-        let dueDate;
-
-        if (lastPayment) {
-          dueDate = new Date(lastPayment.payment_date);
-          dueDate.setFullYear(dueDate.getFullYear() + 1);
-        } else {
-          dueDate = new Date(startDate);
+        if (
+          today.getMonth() < billingMonth ||
+          (today.getMonth() === billingMonth &&
+            today.getDate() < billingDay)
+        ) {
+          cycleStart.setFullYear(cycleStart.getFullYear() - 1);
         }
+
+        const nextCycle = new Date(cycleStart);
+        nextCycle.setFullYear(nextCycle.getFullYear() + 1);
+
+        const paidThisCycle = payments.some((p) => {
+          if (String(p.debt_id) !== String(debt._id)) return false;
+          const d = new Date(p.payment_date);
+          return d >= cycleStart && d < nextCycle;
+        });
 
         amount = calculateAnnualPayment(debt);
 
-        const isOverdue = dueDate < today;
-        const isUpcoming =
-          dueDate >= today && dueDate <= next30Days;
+        if (!paidThisCycle) {
+          return {
+            ...debt,
+            paymentDate: cycleStart,
+            amount,
+            isOverdue: today > cycleStart,
+          };
+        }
 
-        if (!isOverdue && !isUpcoming) return null;
+        const upcomingDate = new Date(nextCycle);
 
-        return {
-          ...debt,
-          paymentDate: dueDate,
-          amount,
-          isOverdue,
-        };
+        if (upcomingDate >= today && upcomingDate <= next30Days) {
+          return {
+            ...debt,
+            paymentDate: upcomingDate,
+            amount,
+            isOverdue: false,
+          };
+        }
+
+        return null;
       }
 
       return null;
@@ -186,7 +191,7 @@ export const getAllPayments = (debts, payments) => {
     .sort((a, b) => new Date(a.paymentDate) - new Date(b.paymentDate));
 };
 
-// ------------------ COMPONENT (UNCHANGED) ------------------
+// ------------------ COMPONENT ------------------
 
 const PaymentList = ({ debts, payments = [], onSuccess }) => {
   const allPayments = getAllPayments(debts, payments);
