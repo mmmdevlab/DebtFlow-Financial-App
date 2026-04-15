@@ -46,7 +46,8 @@ const calculateMonthlyPayment = (debt) => {
   if (!r) return P / totalMonths;
 
   return (
-    (P * r * Math.pow(1 + r, totalMonths)) / (Math.pow(1 + r, totalMonths) - 1)
+    (P * r * Math.pow(1 + r, totalMonths)) /
+    (Math.pow(1 + r, totalMonths) - 1)
   );
 };
 
@@ -62,7 +63,7 @@ export const getAllPayments = (debts, payments) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const next30Days = new Date();
+  const next30Days = new Date(today);
   next30Days.setDate(today.getDate() + 30);
 
   return debts
@@ -71,112 +72,112 @@ export const getAllPayments = (debts, payments) => {
 
       // ---------- ONE-TIME ----------
       if (debt.frequency === "one-time payment") {
-        const due = new Date(debt.due_date);
+        const dueDate = new Date(debt.due_date);
+        amount = calculateOneOffAmount(debt);
 
-        if (due < today) {
-          const amount = Math.min(
-            calculateOneOffAmount(debt),
-            Number(debt.current_balance || 0),
-          );
+        if (amount <= 0) return null;
 
-          if (amount <= 0) return null;
-          return {
-            ...debt,
-            paymentDate: due,
-            amount,
-            isOverdue: true,
-          };
-        }
-
-        if (due >= today && due <= next30Days) {
-          const amount = Math.min(
-            calculateOneOffAmount(debt),
-            Number(debt.current_balance || 0),
-          );
-
-          if (amount <= 0) return null;
-          return {
-            ...debt,
-            paymentDate: due,
-            amount,
-            isOverdue: false,
-          };
-        }
+        return {
+          ...debt,
+          paymentDate: dueDate,
+          amount,
+          isOverdue: dueDate < today,
+        };
       }
 
-      // ---------- MONTHLY ----------
-      else if (debt.frequency === "monthly") {
-        const next = new Date();
-        next.setMonth(next.getMonth() + 1);
+      // ---------- MONTHLY (FIXED) ----------
+      if (debt.frequency === "monthly") {
+        const startDate = new Date(debt.start_date);
+        const billingDay = startDate.getDate();
 
-        const last = new Date();
-        last.setMonth(last.getMonth() - 1);
+        // current cycle start
+        const cycleStart = new Date(today);
+        cycleStart.setDate(billingDay);
+        cycleStart.setHours(0, 0, 0, 0);
 
-        const paidAfterLast = payments.some(
-          (p) => p.debt_id === debt._id && new Date(p.payment_date) >= last,
-        );
+        if (today.getDate() < billingDay) {
+          cycleStart.setMonth(cycleStart.getMonth() - 1);
+        }
 
-        if (!paidAfterLast) {
-          const monthly = calculateMonthlyPayment(debt);
-          const paidThisCycle = payments
-            .filter((p) => p.debt_id === debt._id)
-            .filter((p) => new Date(p.payment_date) >= last)
-            .reduce((sum, p) => sum + p.amount, 0);
+        // next cycle
+        const nextCycle = new Date(cycleStart);
+        nextCycle.setMonth(nextCycle.getMonth() + 1);
 
-          amount = Math.max(0, monthly - paidThisCycle);
+        // check if paid in this cycle
+        const paidThisCycle = payments.some((p) => {
+          if (String(p.debt_id) === String(debt._id)) return false;
+          const d = new Date(p.payment_date);
+          return d >= cycleStart && d < nextCycle;
+        });
 
-          if (amount <= 0) return null;
+        amount = calculateMonthlyPayment(debt);
 
+        // not paid
+        if (!paidThisCycle) {
           return {
             ...debt,
-            paymentDate: last,
+            paymentDate: cycleStart,
             amount,
-            isOverdue: true,
+            isOverdue: today > cycleStart,
           };
         }
 
-        if (next >= today && next <= next30Days) {
-          return {
-            ...debt,
-            paymentDate: next,
-            amount: calculateMonthlyPayment(debt),
-            isOverdue: false,
-          };
-        }
+        // paid
+        if (paidThisCycle) {
+          const upcomingDate = new Date(nextCycle);
+
+          // 🔑 ONLY show next payment AFTER current cycle has passed
+          if (today >= nextCycle) {
+            if (upcomingDate <= next30Days) {
+              return {
+                ...debt,
+                paymentDate: upcomingDate,
+                amount,
+                isOverdue: false,
+              };
+            }
+          }
+
+  return null;
+}
+
+        return null;
       }
 
       // ---------- ANNUAL ----------
-      else if (debt.frequency === "annually") {
-        const next = new Date(debt.start_date);
+      if (debt.frequency === "annually") {
+        const startDate = new Date(debt.start_date);
 
-        while (next < today) {
-          next.setFullYear(next.getFullYear() + 1);
+        const lastPayment = payments
+          .filter((p) => p.debt_id === debt._id)
+          .sort(
+            (a, b) =>
+              new Date(b.payment_date) - new Date(a.payment_date),
+          )[0];
+
+        let dueDate;
+
+        if (lastPayment) {
+          dueDate = new Date(lastPayment.payment_date);
+          dueDate.setFullYear(dueDate.getFullYear() + 1);
+        } else {
+          dueDate = new Date(startDate);
         }
 
-        const last = new Date(next);
-        last.setFullYear(last.getFullYear() - 1);
+        amount = calculateAnnualPayment(debt);
 
-        const paidAfterLast = payments.some(
-          (p) => p.debt_id === debt._id && new Date(p.payment_date) >= last,
-        );
+        const isOverdue = dueDate < today;
+        const isUpcoming =
+          dueDate >= today && dueDate <= next30Days;
 
-        if (!paidAfterLast && last < today) {
-          return {
-            ...debt,
-            paymentDate: last,
-            amount: calculateAnnualPayment(debt),
-            isOverdue: true,
-          };
-        }
+        if (!isOverdue && !isUpcoming) return null;
 
-        if (next >= today && next <= next30Days) {
-          return {
-            ...debt,
-            paymentDate: next,
-            amount: calculateAnnualPayment(debt),
-            isOverdue: false,
-          };
-        }
+        return {
+          ...debt,
+          paymentDate: dueDate,
+          amount,
+          isOverdue,
+        };
       }
 
       return null;
@@ -185,7 +186,7 @@ export const getAllPayments = (debts, payments) => {
     .sort((a, b) => new Date(a.paymentDate) - new Date(b.paymentDate));
 };
 
-// ------------------ COMPONENT ------------------
+// ------------------ COMPONENT (UNCHANGED) ------------------
 
 const PaymentList = ({ debts, payments = [], onSuccess }) => {
   const allPayments = getAllPayments(debts, payments);
@@ -197,6 +198,7 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
   if (overdue.length === 0 && upcoming.length === 0) {
     return <p className="text-gray-400 text-center py-10">No payments</p>;
   }
+
   const renderPaymentItem = (item, type) => {
     const isOverdue = type === "overdue";
     const isOpen = openId === item._id;

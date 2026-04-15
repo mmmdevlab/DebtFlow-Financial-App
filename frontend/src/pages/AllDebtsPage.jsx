@@ -21,6 +21,12 @@ const AllDebtsPage = () => {
       alert("Error deleting debt");
     }
   };
+  
+  const filteredDebts = debts
+  .filter((d) => Number(d.current_balance) > 0)
+  .filter((d) =>
+    activeFilter === "all" ? true : d.category === activeFilter
+  );
 
   if (loading) return <p className="p-6 text-gray-400">Loading debts...</p>;
   if (error) return <p className="p-6 text-red-500">{error}</p>;
@@ -46,14 +52,11 @@ const AllDebtsPage = () => {
           ))}
         </div>
 
-        {debts.length === 0 ? (
+        {filteredDebts.length === 0 ? (
           <p className="text-gray-400">No debts found.</p>
         ) : (
           <div className="flex flex-col gap-3">
-            {(activeFilter === "all"
-              ? debts
-              : debts.filter((d) => d.category === activeFilter)
-            ).map((debt) => (
+            {filteredDebts.map((debt) => (
               <DebtCard
                 key={debt._id}
                 debt={debt}
@@ -61,8 +64,8 @@ const AllDebtsPage = () => {
                 onUpdated={refetch}
               />
             ))}
-          </div>
-        )}
+        </div>
+)}
       </section>
 
       <section className="flex flex-col gap-4">

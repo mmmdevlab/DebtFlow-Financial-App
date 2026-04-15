@@ -5,7 +5,9 @@ const Payment = require("../models/Payment");
 /* ------ GET ALL -------*/
 const getAllDebts = async (req, res) => {
   try {
-    const debts = await Debt.find({ user_id: req.user._id });
+    const debts = await Debt.find({ 
+      user_id: req.user._id,
+      current_balance: { $gt: 0} });
     res.status(200).json(debts);
   } catch (err) {
     res.status(401).json({ error: err.message });
