@@ -111,18 +111,49 @@ const FormView = ({
           />
         </label>
 
+        {/* 🔥 UPDATED FREQUENCY FIELD */}
         <label className="flex flex-col">
           <span className={labelStyle}>Frequency</span>
-          <select
-            name="frequency"
-            value={formData.frequency}
-            onChange={handleChange}
-            className={inputStyle}
-          >
-            <option value="monthly">Monthly</option>
-            <option value="annually">Annually</option>
-            <option value="one-time payment">One-time payment</option>
-          </select>
+
+          {/* Mortgage */}
+          {formData.category === "mortgage" && (
+            <select
+              name="frequency"
+              value="monthly"
+              className={`${inputStyle} bg-gray-100 cursor-not-allowed`}
+              disabled
+            >
+              <option value="monthly">Monthly</option>
+            </select>
+          )}
+
+          {/* Credit Card */}
+          {formData.category === "creditCard" && (
+            <select
+              name="frequency"
+              value="one-time payment"
+              className={`${inputStyle} bg-gray-100 cursor-not-allowed`}
+              disabled
+            >
+              <option value="one-time payment">One-time payment</option>
+            </select>
+          )}
+
+          {/* Loan */}
+          {formData.category === "loan" && (
+            <select
+              name="frequency"
+              value={formData.frequency || ""}
+              onChange={handleChange}
+              className={inputStyle}
+              required
+            >
+              <option value="">Select frequency</option>
+              <option value="monthly">Monthly</option>
+              <option value="annually">Annually</option>
+              <option value="one-time payment">One-time payment</option>
+            </select>
+          )}
         </label>
 
         <label className="flex flex-col">

@@ -203,10 +203,10 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
   return (
     <div className="flex flex-col gap-4">
       {overdue.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <p className="text-red-500 font-bold uppercase text-xs">
-            ⚠ Overdue Payments
-          </p>
+        <div className="flex flex-col gap-4">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Overdue Payments
+          </h1>
 
           {overdue.map((item) => (
             <div key={item._id}>
@@ -217,7 +217,7 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
                       ? "border-red-400 bg-red-50"
                       : "border-red-200 bg-red-50 hover:border-red-300"
                   }`}
-                onClick={() => setOpenId(openId === item._id ? null : item._id)}
+                // onClick={() => setOpenId(openId === item._id ? null : item._id)}
               >
                 <div className="flex items-center gap-4">
                   <div className="sm:w-[160px] sm:shrink-0">
@@ -246,7 +246,7 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
                   </div>
 
                   <div className="sm:shrink-0">
-                    <ActionButton variant="danger">
+                    <ActionButton variant="danger" onClick={() => setOpenId(openId === item._id ? null : item._id)}>
                       <CreditCard size={14} />
                     </ActionButton>
                   </div>
@@ -280,7 +280,7 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
                       ? "border-green-300"
                       : "border-gray-100 hover:border-gray-300"
                   }`}
-                onClick={() => setOpenId(openId === item._id ? null : item._id)}
+                // onClick={() => setOpenId(openId === item._id ? null : item._id)}
               >
                 <div className="flex items-center gap-4">
                   <div className="min-w-[110px]">
@@ -311,7 +311,7 @@ const PaymentList = ({ debts, payments = [], onSuccess }) => {
                     </p>
                   </div>
                   <div className="sm:shrink-0">
-                    <ActionButton variant="secondary">
+                    <ActionButton variant="secondary" onClick={() => setOpenId(openId === item._id ? null : item._id)}> //
                       <CreditCard size={14} />
                     </ActionButton>
                   </div>

@@ -25,7 +25,32 @@ const AddDebtForm = ({ selectedData, isEditing, onSubmit, onCancel }) => {
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     const finalValue = type === "number" ? parseFloat(value) || 0 : value;
-    setFormData((prev) => ({ ...prev, [name]: finalValue }));
+
+    // 🔥 NEW: Category → Frequency logic
+    if (name === "category") {
+      let updatedFrequency = "";
+
+      if (value === "mortgage") {
+        updatedFrequency = "monthly";
+      } else if (value === "creditCard") {
+        updatedFrequency = "one-time payment";
+      } else if (value === "loan") {
+        updatedFrequency = ""; // user must choose
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        category: value,
+        frequency: updatedFrequency,
+      }));
+
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: finalValue,
+    }));
   };
 
   const handleSubmit = async (e) => {
