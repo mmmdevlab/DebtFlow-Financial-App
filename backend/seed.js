@@ -45,7 +45,7 @@ const seedDatabase = async () => {
         current_balance: 1200,
         start_date: "2023-06-15",
         due_date: "2026-06-15",
-        frequency: "monthly",
+        frequency: "one-time payment",
         status: "active",
       },
     ]);

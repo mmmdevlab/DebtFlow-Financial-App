@@ -27,8 +27,9 @@ export const DebtProvider = ({ children }) => {
       const data = await getAllDebts();
       setDebts(data);
       setError(null);
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      console.error("Fetch Error:", error);
+      setError(error.message);
     } finally {
       setLoading(false);
     }

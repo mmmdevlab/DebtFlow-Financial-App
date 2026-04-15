@@ -44,7 +44,6 @@ const createPayment = async (req, res) => {
     const debt = await Debt.findById(debt_id);
     if (!debt) return res.status(404).json({ err: "Debt not found" });
 
-    // ensure user owns this debt
     if (String(debt.user_id) !== String(user_id)) {
       return res.status(403).json({ err: "Unauthorized" });
     }
@@ -56,7 +55,6 @@ const createPayment = async (req, res) => {
       payment_date,
     });
 
-    // update debt
     debt.current_balance -= amount;
     debt.status = debt.current_balance <= 0 ? "paidOff" : "active";
     await debt.save();
