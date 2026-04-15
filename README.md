@@ -6,17 +6,17 @@
 
 ---
 
-## Technologies & Tools Used
+## Technologies Used
 
 - **Frontend:** React + Vite
-- **Styling:** Tailwindcss
+- **Styling:** Tailwind CSS
 - **Routing:** React Router DOM
-- **Charts** Reaviz (PieChart, BarChart)
-- **Icons** Lucide React
+- **Charts:** Reaviz
+- **Icons:** Lucide React
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB, Mongoose
 - **Authentication:** JWT + bcrypt
-- **Deployment:** Netlify
+- **Deployment:** Netlify (frontend), Render/Railway (backend)
 
 ---
 
@@ -123,7 +123,7 @@ DebtFlow
 ```
 
 [Wireframes](../docs/wireframes)
-[Planning Doc for Wireframes](https://www.figma.com/design/VqnOCCdcwd31uNRM0Hwmh8/Unit-3?node-id=1-3&t=JcD6dPQ02a6zBhxN-1)
+[Planning](https://trello.com/invite/b/69d0f822777818213466dddd/ATTIc1b17de4b61df0c8b872b1219ed7e319ADCA7C06/debtflow-trello)
 
 ## Styling Approach
 
@@ -133,7 +133,15 @@ DebtFlow
 - Semantic colour system: red for overdue, green for paid/active, blue for informational
 - Typography hierarchy: `text-[10px] uppercase tracking-widest` labels, `text-lg font-semibold` values
 
-## Future Roadmap
+### Attributions
+
+- [Reaviz](https://reaviz.io/) — Chart components (PieChart, BarChart)
+- [Lucide React](https://lucide.dev/) — Icon library
+- [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans) — Typography (Google Fonts)
+- [Faker.js](https://fakerjs.dev/) — Used for generating seed data during development
+- [Tailwind CSS](https://tailwindcss.com/) — Utility-first CSS framework
+
+## Next Steps
 
 - 2FA Authentication via email. User receives email to confirm that he created an account on Debt Flow.
 - Business accounts with invoice tracking and multi-user view (e.g. Filter Dashboard to indicate payments due in the next 3 months)

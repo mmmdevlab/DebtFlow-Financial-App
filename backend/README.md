@@ -1,15 +1,7 @@
-# backend
+# DebtFlow — Backend API
 
-To install dependencies:
+The backend REST API for DebtFlow, a dedicated debt and repayment tracking application.
 
-```bash
-bun install
-```
+**Frontend Repository:** [DebtFlow Frontend](https://github.com/YOUR_USERNAME/YOUR_FRONTEND_REPO)
 
-To run:
-
-```bash
-bun run 
-```
-
-This project was created using `bun init` in bun v1.3.9. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+**Live App:** [https://debtflow-financial.netlify.app](https://debtflow-financial.netlify.app/auth/login)
