@@ -135,13 +135,13 @@ DebtFlow
 
 ## Future Roadmap
 
+- 2FA Authentication via email. User receives email to confirm that he created an account on Debt Flow.
+- Business accounts with invoice tracking and multi-user view (e.g. Filter Dashboard to indicate payments due in the next 3 months)
 - Payment reminders and overdue email notifications
-- 3-month cash flow forecast
-- Projected payoff date per debt based on repayment pace
-- Export to CSV / PDF
+- Enhance insights page with projected payoff date per debt based on repayment pace
+- Debt and Payment History export to CSV / PDF
 - Receipt and invoice attachments on payment entries
 - Multi-currency support
-- Business accounts with invoice tracking and multi-user view
 
 ## References & Resources
 

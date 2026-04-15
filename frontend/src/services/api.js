@@ -8,7 +8,7 @@ export const apiFetch = async (endpoint, options = {}) => {
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
   const url = `${BASE_URL}/api${cleanEndpoint}`;
 
-  console.log("Fetching:", url);
+  // console.log("Fetching:", url);
   const res = await fetch(url, {
     ...options,
     headers: {
